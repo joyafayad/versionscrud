@@ -95,6 +95,100 @@ namespace VersionsCRUD.Controllers
         }
 
 
+        [HttpPost]
+        [ProducesResponseType(typeof(VersionUpdateResp), 200)] // Successful update
+        [ProducesResponseType(typeof(VersionUpdateResp), 400)] // Bad request
+        public VersionUpdateResp Update(VersionUpdateReq req)
+        {
+            VersionUpdateResp resp = new VersionUpdateResp();
+            string connectionString = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
+            try
+            {
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Perform the update query
+                    string updateSql = "UPDATE public.versions SET projectid = @projectid, versionnumber = @versionnumber WHERE id = @id";
+                    using (var cmd = new NpgsqlCommand(updateSql, conn))
+        
+                    {
+                        cmd.Parameters.AddWithValue("@projectid", req.projectId);
+                        cmd.Parameters.AddWithValue("@versionnumber", req.versionNumber);
+                        cmd.Parameters.AddWithValue("@id", req.Id);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            resp.code = 0; // Success
+                            resp.idVersion = req.Id;
+                        }
+                        else
+                        {
+                            resp.code = -1; // Failure, no rows affected
+                        }
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                // Error logging
+                Console.WriteLine("Error: " + ex.Message);
+                resp.code = -1; // Failure
+            }
+
+            return resp;
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(VersionUpdateResp), 200)] // Successful update
+        [ProducesResponseType(typeof(VersionUpdateResp), 400)] // Bad request
+        public VersionDeleteResp Delete(VersionDeleteReq req)
+        {
+            VersionDeleteResp resp = new VersionDeleteResp();
+            string connectionString = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
+            try
+            {
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Perform the delete query
+                    string updateSql = "DELETE from public.versions WHERE id = @id";
+                    using (var cmd = new NpgsqlCommand(updateSql, conn))
+                    {
+                       
+                        cmd.Parameters.AddWithValue("@id", req.Id);
+                        int rowsAffected = cmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            resp.code = 0; // Success
+                            resp.idVersion = req.Id;
+                        }
+                        else
+                        {
+                            resp.code = -1; // Failure, no rows affected
+                        }
+                    }
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                // Error logging
+                Console.WriteLine("Error: " + ex.Message);
+                resp.code = -1; // Failure
+            }
+
+            return resp;
+        }
+
+
+
+
+
+
+
 
 
 
