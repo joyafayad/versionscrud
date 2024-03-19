@@ -40,7 +40,7 @@ namespace VersionsCRUD.Controllers
                         //Console.WriteLine("Data inserted successfully!");
                     }
 
-                    string sqlGetId = "SELECT CURRVAL(pg_get_serial_sequence('public.versions', 'idversion'))";
+                    string sqlGetId = "SELECT CURRVAL(pg_get_serial_sequence('public.versions', 'id'))";
                     using (var cmdGetId = new NpgsqlCommand(sqlGetId, conn))
                     {
                         resp.idVersion = Convert.ToInt32((long)cmdGetId.ExecuteScalar());
