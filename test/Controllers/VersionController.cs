@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using NLog;
 using Npgsql;
 using test.Models;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace VersionsCRUD.Controllers
 {
@@ -13,8 +16,12 @@ namespace VersionsCRUD.Controllers
         {
         }
 
+
+       
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger(); // Initialize NLog logger
+
         [HttpPost]
-        public VersionAddResp Add(VersionAddReq req)
+        public VersionAddResp Add(VersionAddReq req )
         {
             VersionAddResp resp = new();
             string connectionString = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
@@ -41,15 +48,19 @@ namespace VersionsCRUD.Controllers
                         //Console.WriteLine($"Data inserted with ID: {insertedId}");
                     }
                     //info logging to know that a new version is added
+                    Logger.Info("A new version is added.");
                 }
             }
             catch (NpgsqlException ex)
             {
                 //error logging to know there is an error
-                Console.WriteLine("Error: " + ex.Message);
+                Logger.Error(ex, "Error occurred while adding a new version.");
             }
             return resp;
         }
+
+        
+
         [HttpGet]
         public List<VersionGetResp> Get()
         {
@@ -80,6 +91,7 @@ namespace VersionsCRUD.Controllers
 
                                 versions.Add(version);
                             }
+                           
                         }
                     }
                 }
