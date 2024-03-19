@@ -31,7 +31,7 @@ namespace VersionsCRUD.Controllers
                 {
                     conn.Open();
 
-                    string sql = "INSERT INTO public.versions (projectidd, versionnumber) VALUES (@projectid, @versionnumber)";
+                    string sql = "INSERT INTO public.versions (projectid, versionnumber) VALUES (@projectid, @versionnumber)";
                     using (var cmd = new NpgsqlCommand(sql, conn))
                     {
                         cmd.Parameters.AddWithValue("@projectid", req.projectId);
