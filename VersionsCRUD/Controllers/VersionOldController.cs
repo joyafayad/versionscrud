@@ -84,7 +84,7 @@ namespace VersionsCRUD.Controllers
                             {
                                 VersionGetResp version = new VersionGetResp
                                 {
-                                    ID = Convert.ToInt32(reader["id"]),
+                                  //  ID = Convert.ToInt32(reader["id"]),
                                     ProjectID = Convert.ToInt32(reader["projectid"]),
                                     VersionNumber = reader["versionnumber"].ToString()
                                 };
@@ -133,7 +133,7 @@ namespace VersionsCRUD.Controllers
                         if (rowsAffected > 0)
                         {
                             resp.code = 0; // Success
-                            resp.idVersion = req.Id;
+                           // resp.idVersion = req.Id;
                         }
                         else
                         {
