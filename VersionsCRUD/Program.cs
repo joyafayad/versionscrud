@@ -44,6 +44,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseMyMiddleware();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapGet("/", async context =>
@@ -57,7 +60,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapRazorPages();
-
-app.UseMyMiddleware();
 
 app.Run();
