@@ -1,13 +1,9 @@
 using NLog.Web;
 using NLog.Extensions.Logging;
+using VersionsCRUD.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
 
-app.Run(async context =>
-{
-    await context.Response.WriteAsync("Hello world!");
-});
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
 logger.Info("start");
@@ -26,6 +22,12 @@ builder.Services.AddLogging(loggingBuilder =>
 });
 
 
+var app = builder.Build();
+
+//app.Run(async context =>
+//{
+//    await context.Response.WriteAsync("Hello world!");
+//});
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -42,6 +44,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseMyMiddleware();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapGet("/", async context =>
