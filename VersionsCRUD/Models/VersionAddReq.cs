@@ -3,7 +3,7 @@
     public class VersionAddReq
     {
         
-            public int projectId { get; set; }
+            public Guid projectId { get; set; }
             public string? versionNumber { get; set; }
         
     }

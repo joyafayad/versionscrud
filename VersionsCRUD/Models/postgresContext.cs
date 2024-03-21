@@ -16,6 +16,7 @@ namespace VersionsCRUD.Models
         {
         }
 
+        public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<Version> Versions { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -30,6 +31,19 @@ namespace VersionsCRUD.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresExtension("pg_catalog", "adminpack");
+
+            modelBuilder.Entity<Project>(entity =>
+            {
+                entity.ToTable("projects");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("gen_random_uuid()");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+            });
 
             modelBuilder.Entity<Version>(entity =>
             {
