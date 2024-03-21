@@ -9,10 +9,10 @@ namespace VersionsCRUD.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class VersionController : ControllerBase
+    public class VersionOldController : ControllerBase
     {
 
-        public VersionController()
+        public VersionOldController()
         {
         }
 
@@ -43,7 +43,7 @@ namespace VersionsCRUD.Controllers
                     string sqlGetId = "SELECT CURRVAL(pg_get_serial_sequence('public.versions', 'id'))";
                     using (var cmdGetId = new NpgsqlCommand(sqlGetId, conn))
                     {
-                        resp.idVersion = Convert.ToInt32((long)cmdGetId.ExecuteScalar());
+                        //resp.idVersion = Convert.ToInt32((long)cmdGetId.ExecuteScalar());
                         resp.code = 0; //0 - Success
                         //Console.WriteLine($"Data inserted with ID: {insertedId}");
                     }

@@ -3,6 +3,6 @@
     public class VersionAddResp
     {
         public int code { get; set; }
-        public int idVersion { get; set; }
+        public Guid idVersion { get; set; }
     }
 }
