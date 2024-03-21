@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using test.Models;
 using VersionsCRUD.Models;
 
@@ -10,6 +11,7 @@ namespace VersionsCRUD.Controllers
     {
 
         private readonly postgresContext _context;
+        private Guid Id;
 
         public VersionController(postgresContext context)
         {
@@ -18,7 +20,7 @@ namespace VersionsCRUD.Controllers
 
         // POST: api/Versions
         [HttpPost]
-        public async Task<ActionResult<VersionAddResp>> CreateVersion(VersionAddReq req)
+        public async Task<ActionResult<VersionAddResp>> Add(VersionAddReq req)
         {
             VersionAddResp resp = new();
 
@@ -38,6 +40,76 @@ namespace VersionsCRUD.Controllers
             resp.idVersion = version.Id;
             resp.code = 0;
             return resp;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<VersionGetResp>>> Get()
+        {
+            var versions = await _context.Versions
+                .Select(v => new VersionGetResp
+                {
+                    ID = v.Id,
+                    ProjectID = v.Projectid,
+                    VersionNumber = v.Versionnumber
+                })
+                .ToListAsync();
+
+            return Ok(versions);
+        }
+        [HttpPut]
+        public async Task<ActionResult<VersionGetResp>> Update(int id, VersionUpdateReq req)
+        {
+            if (Id != req.Id)
+            {
+                return BadRequest();
+            }
+
+            var version = await _context.Versions.FindAsync(Id);
+
+            if (version == null)
+            {
+                return NotFound();
+            }
+
+            version.Projectid = req.projectId;
+            version.Versionnumber = req.versionNumber;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!VersionExists(id))
+            {
+                return NotFound();
+            }
+
+            var response = new VersionGetResp
+            {
+                ID = version.Id,
+                ProjectID = version.Projectid,
+                VersionNumber = version.Versionnumber
+            };
+
+            return response;
+        }
+
+        private bool VersionExists(int id)
+        {
+            return _context.Versions.Any(e => e.Id == Id);
+        }
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var version = await _context.Versions.FindAsync(id);
+            if (version == null)
+            {
+                return NotFound();
+            }
+
+            _context.Versions.Remove(version);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
 
