@@ -85,7 +85,7 @@ namespace VersionsCRUD.Controllers
                                 VersionGetResp version = new VersionGetResp
                                 {
                                   //  ID = Convert.ToInt32(reader["id"]),
-                                    ProjectID = Convert.ToInt32(reader["projectid"]),
+                                    ProjectID = Guid.Parse(reader["projectid"].ToString()),
                                     VersionNumber = reader["versionnumber"].ToString()
                                 };
 
