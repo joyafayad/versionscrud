@@ -74,7 +74,7 @@ namespace VersionsCRUD.Controllers
                 return NotFound("Version not found.");
             }
 
-          
+            version.Id= req.Id;
             version.ProjectId = req.projectId; 
             version.Versionnumber = req.versionNumber; 
 
@@ -85,6 +85,9 @@ namespace VersionsCRUD.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+
+
+
                 if (!VersionExists(id))
                 {
                     return NotFound("Version not found.");

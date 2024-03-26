@@ -1,4 +1,7 @@
-﻿namespace VersionsCRUD.Models
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+namespace VersionsCRUD.Models
 {
     public class MyMiddleware
     {
