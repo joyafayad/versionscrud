@@ -7,6 +7,7 @@
         public Guid? ProjectID { get; set; }
 
         public string VersionNumber { get; set; }
+        public int code { get; set; }
 
     }
 }

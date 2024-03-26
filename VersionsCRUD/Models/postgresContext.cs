@@ -53,7 +53,7 @@ namespace VersionsCRUD.Models
                     .HasColumnName("id")
                     .HasDefaultValueSql("gen_random_uuid()");
 
-                entity.Property(e => e.Projectid).HasColumnName("projectid");
+                entity.Property(e => e.ProjectId).HasColumnName("projectid");
 
                 entity.Property(e => e.Versionnumber)
                     .HasMaxLength(255)

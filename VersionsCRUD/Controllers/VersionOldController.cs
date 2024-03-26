@@ -9,6 +9,7 @@ namespace VersionsCRUD.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class VersionOldController : ControllerBase
     {
 

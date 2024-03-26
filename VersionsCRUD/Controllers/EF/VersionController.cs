@@ -12,6 +12,8 @@ namespace VersionsCRUD.Controllers
 
         private readonly postgresContext _context;
         private Guid Id;
+        private ActionResult<VersionUpdateResp> resp;
+        
 
         public VersionController(postgresContext context)
         {
@@ -30,7 +32,7 @@ namespace VersionsCRUD.Controllers
             }
 
             var version = new VersionsCRUD.Models.Version();
-            version.Projectid = req.projectId;
+            version.ProjectId = req.projectId;
             version.Versionnumber = req.versionNumber;
 
             _context.Versions.Add(version);
@@ -49,54 +51,66 @@ namespace VersionsCRUD.Controllers
                 .Select(v => new VersionGetResp
                 {
                     ID = v.Id,
-                    ProjectID = v.Projectid,
+                    ProjectID = v.ProjectId,
                     VersionNumber = v.Versionnumber
                 })
                 .ToListAsync();
 
             return Ok(versions);
         }
+
         [HttpPut]
-        public async Task<ActionResult<VersionGetResp>> Update(int id, VersionUpdateReq req)
+        public async Task<ActionResult<VersionUpdateResp>> Update(int id, VersionUpdateReq req)
         {
             if (Id != req.Id)
             {
                 return BadRequest();
             }
 
-            var version = await _context.Versions.FindAsync(Id);
+            var version = await _context.Versions.FindAsync(id);
 
             if (version == null)
             {
-                return NotFound();
+                return NotFound("Version not found.");
             }
 
-            version.Projectid = req.projectId;
-            version.Versionnumber = req.versionNumber;
+          
+            version.ProjectId = req.projectId; 
+            version.Versionnumber = req.versionNumber; 
 
             try
             {
+                _context.Versions.Update(version);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!VersionExists(id))
+            catch (DbUpdateConcurrencyException)
             {
-                return NotFound();
+                if (!VersionExists(id))
+                {
+                    return NotFound("Version not found.");
+                }
+                else
+                {
+                    throw; 
+                }
             }
 
-            var response = new VersionGetResp
+            // Construct response with return code
+            var resp = new VersionUpdateResp
             {
-                ID = version.Id,
-                ProjectID = version.Projectid,
-                VersionNumber = version.Versionnumber
+                code = 0
             };
+            return resp;
 
-            return response;
+
         }
 
         private bool VersionExists(int id)
         {
             return _context.Versions.Any(e => e.Id == Id);
         }
+
+
         [HttpDelete]
         public async Task<ActionResult> Delete(int id)
         {
