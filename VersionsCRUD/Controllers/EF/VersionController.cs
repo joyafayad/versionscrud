@@ -15,6 +15,8 @@ namespace VersionsCRUD.Controllers
         private ActionResult<VersionUpdateResp> resp;
         
 
+
+
         public VersionController(postgresContext context)
         {
             _context = context;
@@ -67,7 +69,7 @@ namespace VersionsCRUD.Controllers
                 return BadRequest();
             }
 
-            var version = await _context.Versions.FindAsync(id);
+            var version = await _context.Versions.FindAsync(req.Id);
 
             if (version == null)
             {
@@ -88,14 +90,13 @@ namespace VersionsCRUD.Controllers
 
 
 
-                if (!VersionExists(id))
+                if (!VersionExists(Guid id))
                 {
                     return NotFound("Version not found.");
                 }
-                else
-                {
-                    throw; 
-                }
+               
+
+
             }
 
             // Construct response with return code

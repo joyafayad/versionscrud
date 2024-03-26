@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using test.Models;
 using VersionsCRUD.Models;
@@ -50,6 +51,48 @@ namespace VersionsCRUD.Controllers.EF
                 .ToListAsync();
 
             return Ok(projects);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Guid id, ProjectUpdateReq req)
+        {
+            if (id != req.Id)
+            {
+                return BadRequest();
+            }
+
+            var project = await _context.Projects.FindAsync(id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+            project.Id=req.Id;
+            project.Name = req.Name;
+
+            try
+            {
+                _context.Projects.Update(project);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProjectExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        private bool ProjectExists(Guid id)
+        {
+            return _context.Projects.Any(e => e.Id == id);
         }
     }
 }
