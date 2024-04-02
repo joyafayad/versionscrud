@@ -98,7 +98,7 @@ namespace VersionsCRUD.Controllers.EF
         }
 
         [HttpPost]
-        
+
         public async Task<ActionResult<ProjectGetResp>> GetById(ProjectByIdReq req)
         {
             var project = await _context.Projects.FindAsync(req.Id);
@@ -111,8 +111,8 @@ namespace VersionsCRUD.Controllers.EF
             var projectResp = new ProjectGetResp
             {
                 ID = project.Id,
-                name = project.Name,    
-              
+                name = project.Name,
+
             };
 
             return Ok(projectResp);

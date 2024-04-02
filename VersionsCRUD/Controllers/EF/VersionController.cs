@@ -15,7 +15,7 @@ namespace VersionsCRUD.Controllers
         private readonly postgresContext _context;
         private Guid Id;
         private ActionResult<VersionUpdateResp> resp;
-        
+
 
 
 
@@ -36,7 +36,7 @@ namespace VersionsCRUD.Controllers
             }
 
             var version = new VersionsCRUD.Models.Version();
-            version.ProjectId = req.projectId;
+            version.Projectid = req.projectId;
             version.Versionnumber = req.versionNumber;
 
             _context.Versions.Add(version);
@@ -55,7 +55,7 @@ namespace VersionsCRUD.Controllers
                 .Select(v => new VersionGetResp
                 {
                     ID = v.Id,
-                    ProjectID = v.ProjectId,
+                    ProjectID = v.Projectid,
                     VersionNumber = v.Versionnumber
                 })
                 .ToListAsync();
@@ -64,7 +64,7 @@ namespace VersionsCRUD.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<VersionUpdateResp>> Update(int id, VersionUpdateReq req)
+        public async Task<ActionResult<VersionUpdateResp>> Update(VersionUpdateReq req)
         {
             if (Id != req.Id)
             {
@@ -78,9 +78,9 @@ namespace VersionsCRUD.Controllers
                 return NotFound("Version not found.");
             }
 
-            version.Id= req.Id;
-            version.ProjectId = req.projectId; 
-            version.Versionnumber = req.versionNumber; 
+            version.Id = req.Id;
+            version.Projectid = req.projectId;
+            version.Versionnumber = req.versionNumber;
 
             try
             {
@@ -96,7 +96,7 @@ namespace VersionsCRUD.Controllers
                 {
                     return NotFound("Version not found.");
                 }
-               
+
 
 
             }
@@ -133,7 +133,7 @@ namespace VersionsCRUD.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<VersionGetResp>> GetById( VersionByIdReq req)
+        public async Task<ActionResult<VersionGetResp>> GetById(VersionByIdReq req)
         {
             var version = await _context.Versions.FindAsync(req.Id);
 
