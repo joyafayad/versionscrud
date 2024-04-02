@@ -10,34 +10,50 @@ namespace VersionsCRUD
     public class FeatureController : ControllerBase
     {
         private readonly postgresContext _context;
+        private object releaseDate;
 
         public FeatureController(postgresContext context)
         {
             _context = context;
         }
 
-        // POST: api/feature
+        //post//api //feature
         [HttpPost]
         public async Task<ActionResult<FeatureAddResp>> AddFeature(FeauterAddReq req)
         {
-            FeatutreAddResp resp = new();
+            
             if (req == null)
             {
                 return BadRequest("Invalid request");
             }
 
-            DateTime? release = req.Release;
+            // Convert the Release string to a DateTime object
+            if (!DateTime.TryParse(req.Release, out DateTime Release))
+            {
+                
+                var errorResponse = new FeatureAddResp
+                {
+                    code = 5,
+                    Message = "Invalid release date format"
+                };
+                return Ok (errorResponse);  
+            }
+
             var feature = new Feature
             {
                 Id = Guid.NewGuid(),
                 Name = req.Name,
                 Description = req.Description,
-             
+                Release = (DateOnly?)releaseDate,
+                Created = DateTime.UtcNow,
+                Isactive = true
             };
 
             _context.Features.Add(feature);
             await _context.SaveChangesAsync();
-            _ = new FeatureAddResp
+
+           
+            var resp = new FeatureAddResp
             {
                 Id = feature.Id,
                 code = 0 // Assuming success
@@ -45,7 +61,9 @@ namespace VersionsCRUD
 
             return Ok(resp); 
         }
+
     }
+
 
 
 }

@@ -4,6 +4,6 @@
     {
         public string Name { get; set; }
         public string? Description { get; set; }
-        public DateTime? Release { get; set; }
+        public string Release { get; set; }
     }
 }
