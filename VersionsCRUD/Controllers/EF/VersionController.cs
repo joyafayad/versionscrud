@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models.Versions;
 using test.Models;
 using VersionsCRUD.Models;
+using Version = VersionsCRUD.Models.Version;
 
 namespace VersionsCRUD.Controllers
 {
@@ -46,7 +48,7 @@ namespace VersionsCRUD.Controllers
             return resp;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<IEnumerable<VersionGetResp>>> Get()
         {
             var versions = await _context.Versions
@@ -61,7 +63,7 @@ namespace VersionsCRUD.Controllers
             return Ok(versions);
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<ActionResult<VersionUpdateResp>> Update(int id, VersionUpdateReq req)
         {
             if (Id != req.Id)
@@ -90,7 +92,7 @@ namespace VersionsCRUD.Controllers
 
 
 
-                if (!VersionExists(Guid id))
+                //if (!VersionExists(Guid id))
                 {
                     return NotFound("Version not found.");
                 }
@@ -115,7 +117,7 @@ namespace VersionsCRUD.Controllers
         }
 
 
-        [HttpDelete]
+        [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
             var version = await _context.Versions.FindAsync(id);
@@ -130,6 +132,33 @@ namespace VersionsCRUD.Controllers
             return NoContent();
         }
 
+        [HttpPost]
+        public async Task<ActionResult<VersionGetResp>> GetById( VersionByIdReq req)
+        {
+            var version = await _context.Versions.FindAsync(req.Id);
 
+            if (version == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(version);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<IEnumerable<Version>>> GetByPaging(PagingRequest pagingRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var versions = await _context.Versions
+                .Skip((pagingRequest.PageNumber - 1) * pagingRequest.PageSize)
+                .Take(pagingRequest.PageSize)
+                .ToListAsync();
+
+            return Ok(versions);
+        }
     }
 }

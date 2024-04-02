@@ -1,6 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models.Versions;
 using test.Models;
 using VersionsCRUD.Models;
 using VersionsCRUD.Project;
@@ -27,7 +29,7 @@ namespace VersionsCRUD.Controllers.EF
                 return BadRequest();
             }
 
-            var project = new VersionsCRUD.Models.Project(); 
+            var project = new VersionsCRUD.Models.Project();
             project.Id = Guid.NewGuid(); // Generate a new GUID for the project
             project.Name = req.Name;
 
@@ -39,7 +41,7 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<IEnumerable<ProjectGetResp>>> Get()
         {
             var projects = await _context.Projects
@@ -53,7 +55,7 @@ namespace VersionsCRUD.Controllers.EF
             return Ok(projects);
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> Update(Guid id, ProjectUpdateReq req)
         {
             if (id != req.Id)
@@ -67,7 +69,7 @@ namespace VersionsCRUD.Controllers.EF
             {
                 return NotFound();
             }
-            project.Id=req.Id;
+            project.Id = req.Id;
             project.Name = req.Name;
 
             try
@@ -93,6 +95,27 @@ namespace VersionsCRUD.Controllers.EF
         private bool ProjectExists(Guid id)
         {
             return _context.Projects.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        
+        public async Task<ActionResult<ProjectGetResp>> GetById(ProjectByIdReq req)
+        {
+            var project = await _context.Projects.FindAsync(req.Id);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            var projectResp = new ProjectGetResp
+            {
+                ID = project.Id,
+                name = project.Name,    
+              
+            };
+
+            return Ok(projectResp);
         }
     }
 }
