@@ -26,9 +26,9 @@ namespace VersionsCRUD.Controllers
 
         // POST: api/Versions
         [HttpPost]
-        public async Task<ActionResult<VersionAddResp>> Add(VersionAddReq req)
+        public async Task<ActionResult<FeatutreAddResp>> Add(VersionAddReq req)
         {
-            VersionAddResp resp = new();
+            FeatutreAddResp resp = new();
 
             if (req == null)
             {

@@ -22,9 +22,9 @@ namespace VersionsCRUD.Controllers
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger(); // Initialize NLog logger
 
         [HttpPost]
-        public VersionAddResp Add(VersionAddReq req )
+        public FeatutreAddResp Add(VersionAddReq req )
         {
-            VersionAddResp resp = new();
+            FeatutreAddResp resp = new();
             string connectionString = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
             try
             {
