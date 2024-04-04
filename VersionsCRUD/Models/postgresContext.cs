@@ -7,6 +7,8 @@ namespace VersionsCRUD.Models
 {
     public partial class postgresContext : DbContext
     {
+        internal Task<IEnumerable<object>> features;
+
         public postgresContext()
         {
         }
@@ -22,7 +24,7 @@ namespace VersionsCRUD.Models
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Document> Documents { get; set; } = null!;
         public virtual DbSet<Feature> Features { get; set; } = null!;
-        public virtual DbSet<Metadatum> Metadata { get; set; } = null!;
+        public virtual DbSet<Metadata> Metadata { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<Release> Releases { get; set; } = null!;
@@ -235,7 +237,7 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Release).HasColumnName("release");
             });
 
-            modelBuilder.Entity<Metadatum>(entity =>
+            modelBuilder.Entity<Metadata>(entity =>
             {
                 entity.ToTable("metadata");
 

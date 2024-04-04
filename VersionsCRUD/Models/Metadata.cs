@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VersionsCRUD.Models
 {
-    public partial class Metadatum
+    public partial class Metadata
     {
         public Guid Id { get; set; }
         public string? Description { get; set; }

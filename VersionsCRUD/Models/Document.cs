@@ -10,7 +10,7 @@ namespace VersionsCRUD.Models
             AccessLogs = new HashSet<AccessLog>();
             Attachments = new HashSet<Attachment>();
             Comments = new HashSet<Comment>();
-            Metadata = new HashSet<Metadatum>();
+            Metadata = new HashSet<Metadata>();
             Permissions = new HashSet<Permission>();
             Subscriptions = new HashSet<Subscription>();
         }
@@ -26,7 +26,7 @@ namespace VersionsCRUD.Models
         public virtual ICollection<AccessLog> AccessLogs { get; set; }
         public virtual ICollection<Attachment> Attachments { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Metadatum> Metadata { get; set; }
+        public virtual ICollection<Metadata> Metadata { get; set; }
         public virtual ICollection<Permission> Permissions { get; set; }
         public virtual ICollection<Subscription> Subscriptions { get; set; }
     }

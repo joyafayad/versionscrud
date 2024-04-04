@@ -13,7 +13,7 @@ namespace VersionsCRUD.Controllers
     {
 
         private readonly postgresContext _context;
-        private Guid Id;
+        //private Guid Id;
         private ActionResult<VersionUpdateResp> resp;
 
 
@@ -66,7 +66,7 @@ namespace VersionsCRUD.Controllers
         [HttpPost]
         public async Task<ActionResult<VersionUpdateResp>> Update(VersionUpdateReq req)
         {
-            if (Id != req.Id)
+           // if (Id != req.id)
             {
                 return BadRequest();
             }
@@ -111,9 +111,9 @@ namespace VersionsCRUD.Controllers
 
         }
 
-        private bool VersionExists(int id)
+        private bool VersionExists(Guid id)
         {
-            return _context.Versions.Any(e => e.Id == Id);
+            return _context.Versions.Any(e => e.Id == id);
         }
 
 
