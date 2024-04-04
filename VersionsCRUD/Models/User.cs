@@ -20,6 +20,9 @@ namespace VersionsCRUD.Models
         public string Password { get; set; } = null!;
         public DateOnly? Created { get; set; }
         public bool? Isactive { get; set; }
+        public Guid? Createdby { get; set; }
+        public Guid? Updatedby { get; set; }
+        public DateTime? Updated { get; set; }
 
         public virtual ICollection<AccessLog> AccessLogs { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

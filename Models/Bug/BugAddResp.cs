@@ -10,5 +10,6 @@ namespace Models.Bug
     {
         public Guid Id { get; set; }
         public int code { get; set; }
+        public string Message { get; set; }
     }
 }

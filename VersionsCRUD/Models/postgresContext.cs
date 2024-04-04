@@ -7,8 +7,6 @@ namespace VersionsCRUD.Models
 {
     public partial class postgresContext : DbContext
     {
-        internal Task<IEnumerable<object>> features;
-
         public postgresContext()
         {
         }
@@ -24,7 +22,8 @@ namespace VersionsCRUD.Models
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Document> Documents { get; set; } = null!;
         public virtual DbSet<Feature> Features { get; set; } = null!;
-        public virtual DbSet<Metadata> Metadata { get; set; } = null!;
+        public virtual DbSet<Globaldatum> Globaldata { get; set; } = null!;
+        public virtual DbSet<Metadatum> Metadata { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<Release> Releases { get; set; } = null!;
@@ -58,11 +57,19 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Documentid).HasColumnName("documentid");
 
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Userid).HasColumnName("userid");
 
@@ -87,6 +94,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("id")
                     .HasDefaultValueSql("gen_random_uuid()");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Date)
                     .HasColumnName("date")
                     .HasDefaultValueSql("CURRENT_DATE");
@@ -106,6 +115,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.HasOne(d => d.Document)
                     .WithMany(p => p.Attachments)
@@ -130,6 +145,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Fixed).HasColumnName("fixed");
@@ -143,6 +160,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Status)
                     .HasMaxLength(255)
                     .HasColumnName("status");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -159,11 +182,19 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Documentid).HasColumnName("documentid");
 
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Userid).HasColumnName("userid");
 
@@ -194,6 +225,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
@@ -201,6 +234,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Title)
                     .HasMaxLength(255)
                     .HasColumnName("title");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Versionid).HasColumnName("versionid");
 
@@ -224,6 +263,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Isactive)
@@ -235,9 +276,49 @@ namespace VersionsCRUD.Models
                     .HasColumnName("name");
 
                 entity.Property(e => e.Release).HasColumnName("release");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
             });
 
-            modelBuilder.Entity<Metadata>(entity =>
+            modelBuilder.Entity<Globaldatum>(entity =>
+            {
+                entity.ToTable("globaldata");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("gen_random_uuid()");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("created")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Idlanguage)
+                    .HasColumnName("idlanguage")
+                    .HasDefaultValueSql("1");
+
+                entity.Property(e => e.Isactive)
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Type)
+                    .HasMaxLength(255)
+                    .HasColumnName("type");
+
+                entity.Property(e => e.Value)
+                    .HasMaxLength(255)
+                    .HasColumnName("value");
+            });
+
+            modelBuilder.Entity<Metadatum>(entity =>
             {
                 entity.ToTable("metadata");
 
@@ -249,6 +330,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Documentid).HasColumnName("documentid");
@@ -256,6 +339,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.HasOne(d => d.Document)
                     .WithMany(p => p.Metadata)
@@ -276,6 +365,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Documentid).HasColumnName("documentid");
 
                 entity.Property(e => e.Edit).HasColumnName("edit");
@@ -283,6 +374,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Userid).HasColumnName("userid");
 
@@ -314,6 +411,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
@@ -326,6 +425,8 @@ namespace VersionsCRUD.Models
                     .HasColumnType("timestamp without time zone")
                     .HasColumnName("updated")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
             });
 
             modelBuilder.Entity<Release>(entity =>
@@ -337,12 +438,21 @@ namespace VersionsCRUD.Models
                     .HasDefaultValueSql("gen_random_uuid()");
 
                 entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
+
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
 
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Versionid).HasColumnName("versionid");
 
@@ -365,11 +475,19 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Documentid).HasColumnName("documentid");
 
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Userid).HasColumnName("userid");
 
@@ -398,6 +516,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Iduser).HasColumnName("iduser");
 
                 entity.Property(e => e.Isactive)
@@ -411,6 +531,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Taggeduser)
                     .HasMaxLength(255)
                     .HasColumnName("taggeduser");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.HasOne(d => d.IduserNavigation)
                     .WithMany(p => p.Tags)
@@ -431,6 +557,8 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
                 entity.Property(e => e.Email)
                     .HasMaxLength(255)
                     .HasColumnName("email");
@@ -442,6 +570,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Password)
                     .HasMaxLength(255)
                     .HasColumnName("password");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Username)
                     .HasMaxLength(255)
@@ -464,6 +598,8 @@ namespace VersionsCRUD.Models
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 entity.Property(e => e.CreatedBy).HasColumnName("created_by");
+
+                entity.Property(e => e.Createdby1).HasColumnName("createdby");
 
                 entity.Property(e => e.FeatureId).HasColumnName("feature_id");
 
@@ -497,6 +633,8 @@ namespace VersionsCRUD.Models
                     .HasColumnType("timestamp without time zone")
                     .HasColumnName("updated")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Versionnumber)
                     .HasMaxLength(255)

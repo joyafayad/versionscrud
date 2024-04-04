@@ -12,6 +12,9 @@ namespace VersionsCRUD.Models
         public string? Filetype { get; set; }
         public DateOnly? Date { get; set; }
         public bool? Isactive { get; set; }
+        public Guid? Createdby { get; set; }
+        public Guid? Updatedby { get; set; }
+        public DateTime? Updated { get; set; }
 
         public virtual Document? Document { get; set; }
     }

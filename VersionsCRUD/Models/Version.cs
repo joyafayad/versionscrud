@@ -25,6 +25,8 @@ namespace VersionsCRUD.Models
         public bool? IsMajor { get; set; }
         public bool? IsMinor { get; set; }
         public bool? IsPatch { get; set; }
+        public Guid? Createdby1 { get; set; }
+        public Guid? Updatedby { get; set; }
 
         public virtual Project? Project { get; set; }
         public virtual ICollection<Document> Documents { get; set; }

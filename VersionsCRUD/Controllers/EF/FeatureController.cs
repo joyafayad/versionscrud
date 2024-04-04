@@ -117,7 +117,7 @@ namespace VersionsCRUD
             return Ok(resp);
         }
 
-       
+
         // POST: /feature/getbyid
         [HttpPost]
         public async Task<ActionResult<FeatureGetResp>> GetById(FeatureByIdReq req)
@@ -144,24 +144,24 @@ namespace VersionsCRUD
             return Ok(featureResp);
         }
 
-        
+
         [HttpPost]//check 
         public async Task<IActionResult> Delete(FeatureDeleteReq req)
         {
-            
+
             var feature = await _context.Features.FindAsync(req.Id);
 
-            
+
             if (feature == null)
             {
                 return NotFound();
             }
 
-            
+
             _context.Features.Remove(feature);
             await _context.SaveChangesAsync();
 
-            return NoContent(); 
+            return NoContent();
         }
     }
 }

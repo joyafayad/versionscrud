@@ -9,9 +9,13 @@ namespace VersionsCRUD.Models
         public string? Description { get; set; }
         public DateOnly? Reported { get; set; }
         public DateOnly? Fixed { get; set; }
-        public string? Status { get; set; }
+        public int Status { get; set; }
         public string? Contributor { get; set; }
         public DateOnly? Created { get; set; }
         public bool? Isactive { get; set; }
+        public Guid? Createdby { get; set; }
+        public Guid? Updatedby { get; set; }
+        public DateTime? Updated { get; set; }
+        public string release {  get; set; }
     }
 }
