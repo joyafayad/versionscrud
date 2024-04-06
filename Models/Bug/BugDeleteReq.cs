@@ -8,6 +8,6 @@ namespace Models.Bug
 {
     public class BugDeleteReq
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

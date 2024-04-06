@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Models.Bug
 {
-    public class BugUpdateReq
+    public class BugByIdReq
     {
         public Guid Id { get; set; }
-        public string Description { get; set; }
-        public int Status { get; set; }
-        public  string Fixed {  get; set; }
     }
+
+
 }

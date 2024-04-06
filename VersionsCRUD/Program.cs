@@ -13,8 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddDbContext<postgresContext>(options =>
-   // options.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres;"));
+builder.Services.AddDbContext<postgresContext>(options =>
+   options.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres;"));
 
 // Add services to the container.
 builder.Services.AddRazorPages();

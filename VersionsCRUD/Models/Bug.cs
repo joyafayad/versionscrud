@@ -16,6 +16,6 @@ namespace VersionsCRUD.Models
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }
         public DateTime? Updated { get; set; }
-        public string release {  get; set; }
+        //public string release {  get; set; }
     }
 }
