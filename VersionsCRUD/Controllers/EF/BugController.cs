@@ -67,8 +67,8 @@ namespace VersionsCRUD.Controllers.EF
 
 
         }
-        
-        
+
+
 
         [HttpPost]
         public async Task<ActionResult<BugUpdateResp>> Update(BugUpdateReq req)
@@ -134,7 +134,7 @@ namespace VersionsCRUD.Controllers.EF
 
                 var resp = new BugDeleteResp
                 {
-                    code = 0 
+                    code = 0
                 };
 
                 return Ok(resp);
@@ -179,7 +179,7 @@ namespace VersionsCRUD.Controllers.EF
         {
             try
             {
-                
+
                 var bug = await _context.Bugs.FindAsync(req.Id);
 
                 if (bug == null)
@@ -187,7 +187,7 @@ namespace VersionsCRUD.Controllers.EF
                     return NotFound("Bug not found");
                 }
 
-               
+
                 var bugResponse = new BugGetResp
                 {
                     Id = bug.Id,
@@ -195,15 +195,15 @@ namespace VersionsCRUD.Controllers.EF
                     //Reported = bug.Reported,
                     //Fixed = bug.Fixed,
                     //Status = bug.Status
-                    
+
                 };
 
-                
+
                 return Ok(bugResponse);
             }
             catch (Exception ex)
             {
-                
+
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
             }
         }
@@ -217,15 +217,15 @@ namespace VersionsCRUD.Controllers.EF
 
     }
 
-}       
+}
 
 
-    
-
-  
 
 
-    
 
-    
+
+
+
+
+
 

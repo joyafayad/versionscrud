@@ -7,6 +7,8 @@ namespace VersionsCRUD.Models
     {
         public Project()
         {
+            Bugs = new HashSet<Bug>();
+            Features = new HashSet<Feature>();
             Versions = new HashSet<Version>();
         }
 
@@ -18,6 +20,8 @@ namespace VersionsCRUD.Models
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }
 
+        public virtual ICollection<Bug> Bugs { get; set; }
+        public virtual ICollection<Feature> Features { get; set; }
         public virtual ICollection<Version> Versions { get; set; }
     }
 }

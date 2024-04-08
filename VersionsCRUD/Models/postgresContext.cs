@@ -155,17 +155,22 @@ namespace VersionsCRUD.Models
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
 
+                entity.Property(e => e.Projectsid).HasColumnName("projectsid");
+
                 entity.Property(e => e.Reported).HasColumnName("reported");
 
-                entity.Property(e => e.Status)
-                    .HasMaxLength(255)
-                    .HasColumnName("status");
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Updated)
                     .HasColumnType("timestamp without time zone")
                     .HasColumnName("updated");
 
                 entity.Property(e => e.Updatedby).HasColumnName("updatedby");
+
+                entity.HasOne(d => d.Projects)
+                    .WithMany(p => p.Bugs)
+                    .HasForeignKey(d => d.Projectsid)
+                    .HasConstraintName("fk_bug_projects");
             });
 
             modelBuilder.Entity<Comment>(entity =>
@@ -275,6 +280,8 @@ namespace VersionsCRUD.Models
                     .HasMaxLength(255)
                     .HasColumnName("name");
 
+                entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
                 entity.Property(e => e.Release).HasColumnName("release");
 
                 entity.Property(e => e.Updated)
@@ -282,6 +289,11 @@ namespace VersionsCRUD.Models
                     .HasColumnName("updated");
 
                 entity.Property(e => e.Updatedby).HasColumnName("updatedby");
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Features)
+                    .HasForeignKey(d => d.ProjectId)
+                    .HasConstraintName("fk_feature_project");
             });
 
             modelBuilder.Entity<Globaldatum>(entity =>
@@ -566,6 +578,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Isactive)
                     .HasColumnName("isactive")
                     .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Isloggedin).HasColumnName("isloggedin");
+
+                entity.Property(e => e.Lastlogin).HasColumnName("lastlogin");
+
+                entity.Property(e => e.Lastlogout).HasColumnName("lastlogout");
 
                 entity.Property(e => e.Password)
                     .HasMaxLength(255)

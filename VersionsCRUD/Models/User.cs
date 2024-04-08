@@ -23,6 +23,9 @@ namespace VersionsCRUD.Models
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }
         public DateTime? Updated { get; set; }
+        public bool? Isloggedin { get; set; }
+        public DateOnly? Lastlogin { get; set; }
+        public DateOnly? Lastlogout { get; set; }
 
         public virtual ICollection<AccessLog> AccessLogs { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }

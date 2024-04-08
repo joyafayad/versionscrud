@@ -14,5 +14,8 @@ namespace VersionsCRUD.Models
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }
         public DateTime? Updated { get; set; }
+        public Guid? ProjectId { get; set; }
+
+        public virtual Project? Project { get; set; }
     }
 }
