@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Feature
 {
-    public class FeatureByIdResp
+    public class FeatureGetByIdResp
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;

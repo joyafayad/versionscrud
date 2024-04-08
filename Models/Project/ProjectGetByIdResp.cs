@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Models.Versions
 {
-    public class ProjectByIdResp
+    public class ProjectGetByIdResp
     {
         public Guid ID { get; set; }
 

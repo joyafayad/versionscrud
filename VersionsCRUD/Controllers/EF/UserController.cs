@@ -59,27 +59,37 @@ namespace VersionsCRUD.Controllers.EF
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<UserGetResp>>> Get()
+        public async Task<ActionResult<IEnumerable<UserGetResp>>> Get(UserGetByIdReq req)
         {
-            try
-            {
-                var users = await _context.Users
-                    .Select(u => new UserGetResp
-                    {
-                        Id = u.Id,
-                        Username = u.Username,
-                        Email = u.Email,
-                        // Created = u.Created,
-                        //IsActive = u.Isactive
-                    })
-                    .ToListAsync();
+            //try
+            //{
+            //    var users = await _context.Users
+            //        .Select(u => new UserGetResp
+            //        {
+            //            Id = u.Id,
+            //            Username = u.Username,
+            //            Email = u.Email,
+            //            // Created = u.Created,
+            //            //IsActive = u.Isactive
+            //        })
+            //        .ToListAsync();
 
-                return Ok(users);
-            }
-            catch (Exception ex)
+                if (!ModelState.IsValid)
             {
-                return StatusCode(500, "An error occurred while retrieving users: " + ex.Message);
+                return BadRequest(ModelState);
             }
+
+            var users = await _context.Users
+           .Skip((req.pagenumber - 1) * req.pagesize)
+           .Take(req.pagesize)
+           .ToListAsync();
+
+            return Ok(users);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, "An error occurred while retrieving users: " + ex.Message);
+            //}
         }
 
         [HttpPost]
@@ -115,7 +125,7 @@ namespace VersionsCRUD.Controllers.EF
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserDeleteResp>> DeleteUser(UserDeleteReq req)
+        public async Task<ActionResult<UserDeleteResp>> Delete(UserDeleteReq req)
         {
             try
             {

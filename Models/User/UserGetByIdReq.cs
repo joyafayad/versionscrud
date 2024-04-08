@@ -9,5 +9,7 @@ namespace Models.User
     public class UserGetByIdReq
     {
         public Guid Id { get; set; }
+        public int pagenumber { get; set; }
+        public int pagesize { get; set; }
     }
 }

@@ -42,15 +42,25 @@ namespace VersionsCRUD.Controllers.EF
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<ProjectGetResp>>> Get()
+        public async Task<ActionResult<IEnumerable<ProjectGetResp>>> Get(ProjectGetByIdReq req)
         {
+            //var projects = await _context.Projects
+            //    .Select(p => new ProjectGetResp
+            //    {
+            //        ID = p.Id,
+            //        name = p.Name
+            //    })
+            //    .ToListAsync();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var projects = await _context.Projects
-                .Select(p => new ProjectGetResp
-                {
-                    ID = p.Id,
-                    name = p.Name
-                })
-                .ToListAsync();
+           .Skip((req.pagenumber - 1) * req.pagesize)
+           .Take(req.pagesize)
+           .ToListAsync();
+
 
             return Ok(projects);
         }
@@ -99,7 +109,7 @@ namespace VersionsCRUD.Controllers.EF
 
         [HttpPost]
 
-        public async Task<ActionResult<ProjectGetResp>> GetById(ProjectByIdReq req)
+        public async Task<ActionResult<ProjectGetResp>> GetById(ProjectGetByIdReq req)
         {
             var project = await _context.Projects.FindAsync(req.Id);
 

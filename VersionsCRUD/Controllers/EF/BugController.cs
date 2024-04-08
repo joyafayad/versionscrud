@@ -145,68 +145,81 @@ namespace VersionsCRUD.Controllers.EF
             }
         }
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<BugGetResp>>> Get()
+        public async Task<ActionResult<IEnumerable<BugGetResp>>> Get(BugGetByIdReq req)
         {
-            try
-            {
-                var bugs = await _context.Bugs
-                    .Select(b => new BugGetResp
-                    {
-                        Id = b.Id,
-                        Description = b.Description,
-                        //Reported = bug.Reported,
-                        //Fixed = bug.Fixed,
-                        //Status = bug.Status
+            //try
+            //{
+            //    var bugs = await _context.Bugs
+            //        .Select(b => new BugGetResp
+            //        {
+            //            Id = b.Id,
+            //            Description = b.Description,
+            //            //Reported = bug.Reported,
+            //            //Fixed = bug.Fixed,
+            //            //Status = bug.Status
 
 
 
-                    })
-                    .ToListAsync();
-
-                return Ok(bugs);
-            }
-            catch (Exception ex)
-            {
-
-                return StatusCode(500, "An error occurred while retrieving bugs.");
-            }
-
-
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<BugGetResp>> GetBugById(BugByIdReq req)
-        {
-            try
-            {
-
-                var bug = await _context.Bugs.FindAsync(req.Id);
-
-                if (bug == null)
+            //        })
+            //        .ToListAsync();
+                if (!ModelState.IsValid)
                 {
-                    return NotFound("Bug not found");
+                    return BadRequest(ModelState);
                 }
 
-
-                var bugResponse = new BugGetResp
-                {
-                    Id = bug.Id,
-                    Description = bug.Description,
-                    //Reported = bug.Reported,
-                    //Fixed = bug.Fixed,
-                    //Status = bug.Status
-
-                };
+                var bugs = await _context.Bugs
+               .Skip((req.pagenumber - 1) * req.pagesize)
+               .Take(req.pagesize)
+               .ToListAsync();
 
 
-                return Ok(bugResponse);
+                return Ok(bugs);
+                //        }
+
+
+                //    }
+                //        catch (Exception ex)
+                //        {
+
+                //            return StatusCode(500, "An error occurred while retrieving bugs.");
+                //}
+
+
             }
-            catch (Exception ex)
-            {
+}
+    //[HttpPost] error
+    //    public async Task<ActionResult<BugGetResp>> GetById(BugGetByIdReq req)
+    //    {
+    //        try
+    //        {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
-            }
-        }
+    //            var bug = await _context.Bugs.FindAsync(req.Id);
+
+    //            if (bug == null)
+    //            {
+    //                return NotFound("Bug not found");
+    //            }
+
+
+    //            var bugResponse = new BugGetResp
+    //            {
+    //                Id = bug.Id,
+    //                Description = bug.Description,
+    //                //Reported = bug.Reported,
+    //                //Fixed = bug.Fixed,
+    //                //Status = bug.Status
+
+    //            };
+
+
+    //            return Ok(bugResponse);
+    //        }
+    //        catch (Exception ex)
+    //        {
+
+    //            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
+    //        }
+    //    }
 
 
 
@@ -217,7 +230,7 @@ namespace VersionsCRUD.Controllers.EF
 
     }
 
-}
+
 
 
 

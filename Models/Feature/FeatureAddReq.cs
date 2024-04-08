@@ -1,6 +1,6 @@
 ﻿namespace VersionsCRUD
 {
-    public class FeauterAddReq
+    public class FeatureAddReq
     {
         public string Name { get; set; }
         public string? Description { get; set; }

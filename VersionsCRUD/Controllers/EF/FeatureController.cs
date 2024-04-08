@@ -22,7 +22,7 @@ namespace VersionsCRUD
         }
         // POST: /feature/add
         [HttpPost]
-        public async Task<ActionResult<FeatureAddResp>> Add(FeauterAddReq req)
+        public async Task<ActionResult<FeatureAddResp>> Add(FeatureAddReq req)
         {
 
             if (req == null)
@@ -67,22 +67,34 @@ namespace VersionsCRUD
 
         // POST: /feature/get
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<FeatureGetResp>>> Get()
+        public async Task<ActionResult<IEnumerable<FeatureGetResp>>> Get(FeatureGetByIdReq req)
         {
-            var features = await _context.Features.ToListAsync();
+            //var features = await _context.Features.ToListAsync();
 
-            if (features == null)
+            //if (features == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return Ok(features.Select(f => new FeatureGetResp
+            //{
+            //    Id = f.Id,
+            //    Name = f.Name,
+            //    Description = f.Description,
+            //    // Release = f.Release?.ToUniversalTime() //check it
+            //}));
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return BadRequest(ModelState);
             }
 
-            return Ok(features.Select(f => new FeatureGetResp
-            {
-                Id = f.Id,
-                Name = f.Name,
-                Description = f.Description,
-                // Release = f.Release?.ToUniversalTime() //check it
-            }));
+            var features = await _context.Features
+           .Skip((req.pagenumber - 1) * req.pagesize)
+           .Take(req.pagesize)
+           .ToListAsync();
+
+
+            return Ok(features);
         }
 
 
@@ -120,7 +132,7 @@ namespace VersionsCRUD
 
         // POST: /feature/getbyid
         [HttpPost]
-        public async Task<ActionResult<FeatureGetResp>> GetById(FeatureByIdReq req)
+        public async Task<ActionResult<FeatureGetResp>> GetById(FeatureGetByIdReq req)
         {
 
             var feature = await _context.Features.FindAsync(req.Id);

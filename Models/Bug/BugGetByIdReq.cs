@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Models.Bug
 {
-    public class BugByIdReq
+    public class BugGetByIdReq
     {
         public Guid Id { get; set; }
+        public int pagenumber { get; set; }
+        public int pagesize { get; set; }
     }
 
 

@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace Models.Versions
 {
-    public class ProjectByIdReq
+    public class ProjectGetByIdReq
     {
         [Required(ErrorMessage = "Id is required")]
         public Guid Id { get; set; }
+        public int pagenumber { get; set; }
+        public int pagesize { get; set; }
     }
 }
