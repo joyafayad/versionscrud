@@ -12,10 +12,25 @@ namespace VersionsCRUD.Models
             _next = next;
             _logger = logFactory.CreateLogger("MyMiddleware");
         }
+        //public async Task Invoke(HttpContext httpContext)
+        //{
+        //    _logger.LogInformation("MyMiddleware executing..");
+        //    await _next(httpContext); // calling next middleware
+        //}
         public async Task Invoke(HttpContext httpContext)
         {
-            _logger.LogInformation("MyMiddleware executing..");
-            await _next(httpContext); // calling next middleware
+
+            try
+            {
+                _logger.LogInformation("MyMiddleware executing..");
+                await _next(httpContext); // calling next middleware
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in MyMiddleware.");
+                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                await httpContext.Response.WriteAsync("An unexpected error occurred. Please try again later.");
+            }
         }
     }
     // Extension method used to add the middleware to the HTTP request pipeline.
@@ -26,4 +41,5 @@ namespace VersionsCRUD.Models
             return builder.UseMiddleware<MyMiddleware>();
         }
     }
+    
 }
