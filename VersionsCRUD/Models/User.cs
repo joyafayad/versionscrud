@@ -32,5 +32,6 @@ namespace VersionsCRUD.Models
         public virtual ICollection<Permission> Permissions { get; set; }
         public virtual ICollection<Subscription> Subscriptions { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
+        public string? Token { get; internal set; }
     }
 }

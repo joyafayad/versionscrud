@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.Bug;
 using VersionsCRUD.Models;
 
@@ -38,32 +39,28 @@ namespace VersionsCRUD.Controllers.EF
             //    return Ok(errorResponse);
             //}
 
-            try
+
+            var bug = new Bug
             {
-                var bug = new Bug
-                {
-                    Id = Guid.NewGuid(),
-                    Description = req.Description,
-                    Status = req.Status,
-                    //release = releaseDate.ToString(), 
+                Id = Guid.NewGuid(),
+                Description = req.Description,
+                Status = req.Status,
+                //release = releaseDate.ToString(), 
 
-                };
+            };
 
-                _context.Bugs.Add(bug);
-                await _context.SaveChangesAsync();
+            _context.Bugs.Add(bug);
+            await _context.SaveChangesAsync();
 
-                var resp = new BugAddResp
-                {
-                    Id = bug.Id,
-                    code = 0
-                };
-
-                return Ok(resp);
-            }
-            catch (Exception ex)
+            var resp = new BugAddResp
             {
-                return StatusCode(500, "An error occurred while adding the bug.");
-            }
+                Id = bug.Id,
+                code = 0
+            };
+
+            return Ok(resp);
+
+
 
 
         }
@@ -147,88 +144,131 @@ namespace VersionsCRUD.Controllers.EF
         [HttpPost]
         public async Task<ActionResult<IEnumerable<BugGetResp>>> Get(BugGetByIdReq req)
         {
-            //try
-            //{
-            //    var bugs = await _context.Bugs
-            //        .Select(b => new BugGetResp
-            //        {
-            //            Id = b.Id,
-            //            Description = b.Description,
-            //            //Reported = bug.Reported,
-            //            //Fixed = bug.Fixed,
-            //            //Status = bug.Status
+            try
+            {
+                //{
+                //    var bugs = await _context.Bugs
+                //        .Select(b => new BugGetResp
+                //        {
+                //            Id = b.Id,
+                //            Description = b.Description,
+                //            //Reported = bug.Reported,
+                //            //Fixed = bug.Fixed,
+                //            //Status = bug.Status
 
 
 
-            //        })
-            //        .ToListAsync();
+                //        })
+                //        .ToListAsync();
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
                 var bugs = await _context.Bugs
-               .Skip((req.pagenumber - 1) * req.pagesize)
-               .Take(req.pagesize)
-               .ToListAsync();
-
+                    .Skip((req.pagenumber - 1) * req.pagesize)
+                    .Take(req.pagesize)
+                    .ToListAsync();
 
                 return Ok(bugs);
-                //        }
-
-
-                //    }
-                //        catch (Exception ex)
-                //        {
-
-                //            return StatusCode(500, "An error occurred while retrieving bugs.");
-                //}
-
-
             }
-}
-    //[HttpPost] error
-    //    public async Task<ActionResult<BugGetResp>> GetById(BugGetByIdReq req)
-    //    {
-    //        try
-    //        {
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while retrieving bugs: " + ex.Message);
+            }
+        }
 
-    //            var bug = await _context.Bugs.FindAsync(req.Id);
+       
+               [HttpPost] 
+                public async Task<ActionResult<BugGetResp>> GetById(BugGetByIdReq req)
+                {
+                   try
+                   {
 
-    //            if (bug == null)
-    //            {
-    //                return NotFound("Bug not found");
-    //            }
+                     var bug = await _context.Bugs.FindAsync(req.Id);
 
-
-    //            var bugResponse = new BugGetResp
-    //            {
-    //                Id = bug.Id,
-    //                Description = bug.Description,
-    //                //Reported = bug.Reported,
-    //                //Fixed = bug.Fixed,
-    //                //Status = bug.Status
-
-    //            };
+                      if (bug == null)
+                      {
+                               return NotFound("Bug not found");
+                      }
 
 
-    //            return Ok(bugResponse);
-    //        }
-    //        catch (Exception ex)
-    //        {
+                          var bugResponse = new BugGetResp
+                          {
+                                Id = bug.Id,
+                                Description = bug.Description,
+                               //Reported = bug.Reported,
+                              //Fixed = bug.Fixed,
+                               //Status = bug.Status
 
-    //            return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
-    //        }
-    //    }
-
-
-
+                          };
 
 
+                          return Ok(bugResponse);
+                      }
+                       catch (Exception ex)
+                    {
 
+                        return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
+                   }
+        }
 
+        //[HttpPost]
+        //public async Task<ActionResult<LoadDataResponse>> LoadData()
+        //{
+        //    try
+        //    {
+        //        var bugs = await _context.Bugs
+        //       .Select(b => new BugLoadDataResponse{ Id = b.Id, description = b.Description })
+        //       .ToListAsync();
 
+        //        var response = new LoadDataResponse
+        //        {
+        //            Bugs = bugs
+        //        };
+
+        //        return Ok(response);
+        //    }
+        //       catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while loading data.");
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while loading data.");
+        //    }
+        //}
+
+        public void PrintBugStatus()
+        {
+            var globalData = new Globaldata();
+       
+            
+
+            var bugStatusEnglish = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 1);
+            Console.WriteLine("Bug Status in English:");
+            foreach (var data in bugStatusEnglish)
+            {
+                //Console.WriteLine($"{data.name}: {data.Value}");
+            }
+
+            var bugStatusFrench = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 2);
+            Console.WriteLine("\nBug Status in French:");
+            foreach (var data in bugStatusFrench)
+            {
+              //  Console.WriteLine($"{data.Name}: {data.Value}");
+            }
+        }
     }
+
+
+
+
+
+
+
+
+
+
+}
 
 
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.Feature;
+using NLog;
 using test.Models;
 using VersionsCRUD.Models;
 
@@ -15,11 +17,21 @@ namespace VersionsCRUD
         private readonly postgresContext _context;
         private object releaseDate;
         private object _feature;
+        private readonly ILogger<FeatureController> _logger;
+
+
 
         public FeatureController(postgresContext context)
         {
+            
             _context = context;
         }
+
+        private static Logger GetLogger(Logger logger)
+        {
+            return logger;
+        }
+
         // POST: /feature/add
         [HttpPost]
         public async Task<ActionResult<FeatureAddResp>> Add(FeatureAddReq req)
@@ -175,10 +187,38 @@ namespace VersionsCRUD
 
             return NoContent();
         }
+
+       
+
+        //[HttpPost]
+        //public async Task<ActionResult<LoadDataResponse>> LoadData(object _logger)
+        //{
+        //    try
+        //    {
+        //        var features = await _context.Features
+        //       .Select(f => new FeatureLoadDataResponse { Id = f.Id, name = f.Name })
+        //       .ToListAsync();
+
+
+        //        var response = new LoadDataResponse
+        //        {
+        //            Features = features,
+
+        //        };
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while loading data.");
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while loading data.");
+        //    }
+        //}
+
+
+
     }
-}
-
-
+} 
+    
 
 
 

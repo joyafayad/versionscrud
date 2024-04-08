@@ -22,7 +22,7 @@ namespace VersionsCRUD.Models
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Document> Documents { get; set; } = null!;
         public virtual DbSet<Feature> Features { get; set; } = null!;
-        public virtual DbSet<Globaldatum> Globaldata { get; set; } = null!;
+        public virtual DbSet<Globaldata> Globaldata { get; set; } = null!;
         public virtual DbSet<Metadatum> Metadata { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
@@ -296,7 +296,7 @@ namespace VersionsCRUD.Models
                     .HasConstraintName("fk_feature_project");
             });
 
-            modelBuilder.Entity<Globaldatum>(entity =>
+            modelBuilder.Entity<Globaldata>(entity =>
             {
                 entity.ToTable("globaldata");
 

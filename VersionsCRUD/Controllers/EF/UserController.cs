@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using Models.User;
 using VersionsCRUD.Models;
 
@@ -180,11 +181,82 @@ namespace VersionsCRUD.Controllers.EF
             }
         }
 
+        [HttpPost]
+        public IActionResult Login(LoginRequest request)
+        {
+
+            var user = _context.Users.FirstOrDefault(u => u.Username == request.Username);
 
 
+            if (user != null && VerifyPassword(request.Password, user.Password))
+            {
+
+                user.Isloggedin = true;
+                //user.Lastlogin = DateTime.UtcNow;
+                _context.SaveChanges();
+                var token = GenerateToken(user);
 
 
+                return Ok(new { code = 0, token });
+            }
+            else
+            {
+
+                return Unauthorized(new { code = 1211212, message = "Invalid credentials" });
+            }
+        }
+
+
+        private bool VerifyPassword(string enteredPassword, string storedPassword)
+        {
+
+            return enteredPassword == storedPassword;
+        }
+
+
+        private string GenerateToken(User user)
+        {
+
+            return "dummy_token";
+        }
+
+        [HttpPost]
+        public IActionResult RefreshToken(TokenRequest request)
+        {
+
+            var newToken = "dummy_refreshed_token";
+
+
+            return Ok(new { token = newToken });
+        }
+
+        [HttpPost]
+        public IActionResult Logout(TokenRequest request)
+        {
+
+            var user = _context.Users.FirstOrDefault(u => u.Token == request.Token);
+
+            if (user != null)
+            {
+
+                user.Isloggedin = false;
+               // user.Lastlogout = DateTime.UtcNow;
+                _context.SaveChanges();
+
+                return Ok(new { message = "User logged out successfully" });
+            }
+
+
+            return Unauthorized(new { message = "Invalid token" });
+        }
     }
-
 }
+
+
+
+
+
+
+
+
 

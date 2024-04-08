@@ -2,6 +2,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Models;
 using Models.Versions;
 using test.Models;
 using VersionsCRUD.Models;
@@ -14,6 +16,8 @@ namespace VersionsCRUD.Controllers.EF
     public class ProjectController : ControllerBase
     {
         private readonly postgresContext _context;
+      
+
         public ProjectController(postgresContext context)
         {
             _context = context;
@@ -127,5 +131,27 @@ namespace VersionsCRUD.Controllers.EF
 
             return Ok(projectResp);
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult<LoadDataResponse>> LoadData()
+        //{
+        //    try
+        //    {
+        //        var projects = await _context.Projects
+        //            .Select(p => new ProjectLoadDataResponse { Id = p.Id, name = p.Name })
+        //            .ToListAsync();
+        //        var response = new LoadDataResponse
+        //        {
+        //            Projects = projects,
+        //        };
+
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "An error occurred while loading data.");
+        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while loading data.");
+        //    }
+        //}
     }
 }
