@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Security.AccessControl;
+using VersionsCRUD.Common;
 
 namespace VersionsCRUD
 {
-    public class FeatureAddResp
+    public class FeatureAddResp : CommonResp
     {
         public Guid Id { get; set; }
-        public int code { get; set; }
-        public string Message { get; set; }
+       
     }
 }

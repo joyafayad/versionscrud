@@ -47,7 +47,7 @@ namespace VersionsCRUD.Controllers.EF
                 var resp = new UserAddResp
                 {
                     Id = user.Id,
-                    Code = 0
+                    code = 0
                 };
 
                 return Ok(resp);

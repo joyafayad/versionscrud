@@ -1,8 +1,10 @@
-﻿namespace VersionsCRUD.Project
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.Project
 {
-    public class ProjectAddResp
+    public class ProjectAddResp : CommonResp
     {
-        public int code { get; set; }
+      
         public Guid id { get; set; }
     }
 }

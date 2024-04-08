@@ -1,8 +1,10 @@
-﻿namespace test.Models
+﻿using VersionsCRUD.Common;
+
+namespace test.Models
 {
-    public class FeatutreAddResp
+    public class FeatutreAddResp : CommonResp
     {
-        public int code { get; set; }
+      
         public Guid idVersion { get; set; }
     }
 }

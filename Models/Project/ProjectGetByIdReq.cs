@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.PagingRequest;
 
 namespace Models.Versions
 {
-    public class ProjectGetByIdReq
+    public class ProjectGetByIdReq : Paging
     {
         [Required(ErrorMessage = "Id is required")]
         public Guid Id { get; set; }
-        public int pagenumber { get; set; }
-        public int pagesize { get; set; }
+       
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.PagingRequest;
 
 namespace Models.User
 {
-    public class UserGetByIdReq
+    public class UserGetByIdReq : Paging
     {
         public Guid Id { get; set; }
-        public int pagenumber { get; set; }
-        public int pagesize { get; set; }
+        
     }
 }

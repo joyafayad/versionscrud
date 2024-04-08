@@ -37,7 +37,7 @@ namespace VersionsCRUD
                 var errorResponse = new FeatureAddResp
                 {
                     code = 5,
-                    Message = "Invalid release date format"
+                    message = "Invalid release date format"
                 };
                 return Ok(errorResponse);
             }
