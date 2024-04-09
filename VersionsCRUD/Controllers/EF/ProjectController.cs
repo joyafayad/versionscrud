@@ -132,6 +132,35 @@ namespace VersionsCRUD.Controllers.EF
             return Ok(projectResp);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<ProjectDeleteResp>> Delete(ProjectDeleteReq req)
+        {
+            try
+            {
+                var project = await _context.Projects.FindAsync(req.Id);
+
+                if (project == null)
+                {
+                    return NotFound("Project not found");
+                }
+
+                _context.Projects.Remove(project);
+                await _context.SaveChangesAsync();
+
+                var resp = new ProjectDeleteResp
+                {
+                    code = 0 
+                };
+
+                return Ok(resp);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting project: {ex.Message}");
+            }
+        }
+
+
         //[HttpPost]
         //public async Task<ActionResult<LoadDataResponse>> LoadData()
         //{

@@ -1,6 +1,6 @@
 ﻿namespace VersionsCRUD.Project
 {
-    public class ProjetDeleteReq
+    public class ProjectDeleteReq
     {
         public int Id {  get; set; }
     }

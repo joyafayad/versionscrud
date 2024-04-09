@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VersionsCRUD.Common;
 
 namespace Models.Environment
 {
-    public class EnvironmentAddResp : CommonResp
+    public class EnvironmentGetResp
     {
-        public Guid environmentid {  get; set; }
+        public Guid Id;
+
+        public string? projectname { get; set; }
+        public string? description { get; set; }
     }
 }

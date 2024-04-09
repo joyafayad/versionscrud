@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VersionsCRUD.Common;
+using Models.PagingRequest;
 
 namespace Models.Environment
 {
-    public class EnvironmentAddResp : CommonResp
+    public class EnvironmentGetByIdReq : Paging
     {
-        public Guid environmentid {  get; set; }
+        public Guid Id { get; set; }
     }
 }

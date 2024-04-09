@@ -146,22 +146,22 @@ namespace VersionsCRUD.Controllers.EF
         {
             try
             {
-                //{
-                //    var bugs = await _context.Bugs
-                //        .Select(b => new BugGetResp
-                //        {
-                //            Id = b.Id,
-                //            Description = b.Description,
-                //            //Reported = bug.Reported,
-                //            //Fixed = bug.Fixed,
-                //            //Status = bug.Status
+               // {
+                    //var bugs = await _context.Bugs
+                    //    .Select(b => new BugGetResp
+                    //    {
+                    //        Id = b.Id,
+                    //        Description = b.Description,
+                    //        //Reported = bug.Reported,
+                    //        //Fixed = bug.Fixed,
+                    //        //Status = bug.Status
 
 
 
-                //        })
-                //        .ToListAsync();
+                    //    })
+                    //    .ToListAsync();
 
-                if (!ModelState.IsValid)
+                    if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
@@ -237,26 +237,26 @@ namespace VersionsCRUD.Controllers.EF
         //    }
         //}
 
-        public void PrintBugStatus() // fkre aamel class jdide
-        {
-            var globalData = new Globaldata();
+        //public void PrintBugStatus() // fkre aamel class jdide
+        //{
+        //    var globalData = new Globaldata();
 
 
 
-            var bugStatusEnglish = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 1);
-            Console.WriteLine("Bug Status in English:");
-            foreach (var data in bugStatusEnglish)
-            {
-                //Console.WriteLine($"{data.name}: {data.Value}");
-            }
+        //    var bugStatusEnglish = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 1);
+        //    Console.WriteLine("Bug Status in English:");
+        //    foreach (var data in bugStatusEnglish)
+        //    {
+        //        //Console.WriteLine($"{data.name}: {data.Value}");
+        //    }
 
-            var bugStatusFrench = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 2);
-            Console.WriteLine("\nBug Status in French:");
-            foreach (var data in bugStatusFrench)
-            {
-                //  Console.WriteLine($"{data.Name}: {data.Value}");
-            }
-        }
+        //    var bugStatusFrench = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 2);
+        //    Console.WriteLine("\nBug Status in French:");
+        //    foreach (var data in bugStatusFrench)
+        //    {
+        //        //  Console.WriteLine($"{data.Name}: {data.Value}");
+        //    }
+        //}
     }
 
 
