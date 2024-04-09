@@ -75,7 +75,7 @@ namespace VersionsCRUD.Controllers.EF
             //        })
             //        .ToListAsync();
 
-                if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -230,25 +230,25 @@ namespace VersionsCRUD.Controllers.EF
             return Ok(new { token = newToken });
         }
 
-        [HttpPost]
-        public IActionResult Logout(TokenRequest request)
-        {
+        //[HttpPost]
+        //public IActionResult Logout(TokenRequest request)
+        //{
 
-            var user = _context.Users.FirstOrDefault(u => u.Token == request.Token);
+        //    var user = _context.Users.FirstOrDefault(u => u.Token == request.Token);
 
-            if (user != null)
-            {
+        //    if (user != null)
+        //    {
 
-                user.Isloggedin = false;
-               // user.Lastlogout = DateTime.UtcNow;
-                _context.SaveChanges();
+        //        user.Isloggedin = false;
+        //        // user.Lastlogout = DateTime.UtcNow;
+        //        _context.SaveChanges();
 
-                return Ok(new { message = "User logged out successfully" });
-            }
+        //        return Ok(new { message = "User logged out successfully" });
+        //    }
 
 
-            return Unauthorized(new { message = "Invalid token" });
-        }
+        //    return Unauthorized(new { message = "Invalid token" });
+        //}
     }
 }
 

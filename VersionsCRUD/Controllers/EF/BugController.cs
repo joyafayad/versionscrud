@@ -179,39 +179,39 @@ namespace VersionsCRUD.Controllers.EF
             }
         }
 
-       
-               [HttpPost] 
-                public async Task<ActionResult<BugGetResp>> GetById(BugGetByIdReq req)
+
+        [HttpPost]
+        public async Task<ActionResult<BugGetResp>> GetById(BugGetByIdReq req)
+        {
+            try
+            {
+
+                var bug = await _context.Bugs.FindAsync(req.Id);
+
+                if (bug == null)
                 {
-                   try
-                   {
-
-                     var bug = await _context.Bugs.FindAsync(req.Id);
-
-                      if (bug == null)
-                      {
-                               return NotFound("Bug not found");
-                      }
+                    return NotFound("Bug not found");
+                }
 
 
-                          var bugResponse = new BugGetResp
-                          {
-                                Id = bug.Id,
-                                Description = bug.Description,
-                               //Reported = bug.Reported,
-                              //Fixed = bug.Fixed,
-                               //Status = bug.Status
+                var bugResponse = new BugGetResp
+                {
+                    Id = bug.Id,
+                    Description = bug.Description,
+                    //Reported = bug.Reported,
+                    //Fixed = bug.Fixed,
+                    //Status = bug.Status
 
-                          };
+                };
 
 
-                          return Ok(bugResponse);
-                      }
-                       catch (Exception ex)
-                    {
+                return Ok(bugResponse);
+            }
+            catch (Exception ex)
+            {
 
-                        return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
-                   }
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
+            }
         }
 
         //[HttpPost]
@@ -237,11 +237,11 @@ namespace VersionsCRUD.Controllers.EF
         //    }
         //}
 
-        public void PrintBugStatus()
+        public void PrintBugStatus() // fkre aamel class jdide
         {
             var globalData = new Globaldata();
-       
-            
+
+
 
             var bugStatusEnglish = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 1);
             Console.WriteLine("Bug Status in English:");
@@ -254,7 +254,7 @@ namespace VersionsCRUD.Controllers.EF
             Console.WriteLine("\nBug Status in French:");
             foreach (var data in bugStatusFrench)
             {
-              //  Console.WriteLine($"{data.Name}: {data.Value}");
+                //  Console.WriteLine($"{data.Name}: {data.Value}");
             }
         }
     }

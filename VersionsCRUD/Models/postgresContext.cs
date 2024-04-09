@@ -21,8 +21,9 @@ namespace VersionsCRUD.Models
         public virtual DbSet<Bug> Bugs { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Document> Documents { get; set; } = null!;
+        public virtual DbSet<Environment> Environments { get; set; } = null!;
         public virtual DbSet<Feature> Features { get; set; } = null!;
-        public virtual DbSet<Globaldata> Globaldata { get; set; } = null!;
+        public virtual DbSet<Globaldatum> Globaldata { get; set; } = null!;
         public virtual DbSet<Metadatum> Metadata { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
@@ -255,6 +256,47 @@ namespace VersionsCRUD.Models
                     .HasConstraintName("fk_version_id");
             });
 
+            modelBuilder.Entity<Environment>(entity =>
+            {
+                entity.ToTable("environment");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("gen_random_uuid()");
+
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
+                entity.Property(e => e.Createddate)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("createddate")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Description).HasColumnName("description");
+
+                entity.Property(e => e.Isactive)
+                    .IsRequired()
+                    .HasColumnName("isactive")
+                    .HasDefaultValueSql("true");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Projectid).HasColumnName("projectid");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
+
+                entity.Property(e => e.Updateddate)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updateddate")
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Environments)
+                    .HasForeignKey(d => d.Projectid)
+                    .HasConstraintName("fk_project_id");
+            });
+
             modelBuilder.Entity<Feature>(entity =>
             {
                 entity.ToTable("feature");
@@ -296,7 +338,7 @@ namespace VersionsCRUD.Models
                     .HasConstraintName("fk_feature_project");
             });
 
-            modelBuilder.Entity<Globaldata>(entity =>
+            modelBuilder.Entity<Globaldatum>(entity =>
             {
                 entity.ToTable("globaldata");
 

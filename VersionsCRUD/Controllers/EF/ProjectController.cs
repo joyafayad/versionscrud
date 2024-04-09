@@ -16,7 +16,7 @@ namespace VersionsCRUD.Controllers.EF
     public class ProjectController : ControllerBase
     {
         private readonly postgresContext _context;
-      
+
 
         public ProjectController(postgresContext context)
         {

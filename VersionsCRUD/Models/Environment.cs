@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace VersionsCRUD.Models
+{
+    public partial class Environment
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string? Description { get; set; }
+        public bool? Isactive { get; set; }
+        public DateTime Createddate { get; set; }
+        public Guid Createdby { get; set; }
+        public DateTime Updateddate { get; set; }
+        public Guid Updatedby { get; set; }
+        public Guid? Projectid { get; set; }
+
+        public virtual Project? Project { get; set; }
+    }
+}
