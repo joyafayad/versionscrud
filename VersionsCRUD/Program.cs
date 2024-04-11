@@ -2,8 +2,11 @@ using NLog.Web;
 using NLog.Extensions.Logging;
 using VersionsCRUD.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
@@ -16,7 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<postgresContext>(options =>
    options.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=postgres;"));
 
-// Add services to the container.
+// Add services to the container.2
 builder.Services.AddRazorPages();
 
 builder.Services.AddLogging(loggingBuilder =>
@@ -42,30 +45,39 @@ if (!app.Environment.IsDevelopment())
 
 
 
+bool enableSwagger = false;
+if (enableSwagger)
+{
 
-app.UseSwagger();
-app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+    });
+}
+
 
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+    app.UseStaticFiles();
 
-app.UseRouting();
+    app.UseRouting();
 
-app.UseMyMiddleware();
+    app.UseMyMiddleware();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapGet("/", async context =>
+    app.UseEndpoints(endpoints =>
     {
-        await context.Response.WriteAsync("Hello World!");
+       
+        endpoints.MapGet("/", async context =>
+        {
+            await context.Response.WriteAsync("Hello World!");
+        });
     });
-});
 
-app.UseAuthorization();
+    app.UseAuthorization();
 
-app.MapControllers();
+    app.MapControllers();
 
-app.MapRazorPages();
+    app.MapRazorPages();
 
-app.Run();
+    app.Run(); 
