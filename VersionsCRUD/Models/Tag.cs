@@ -9,7 +9,7 @@ namespace VersionsCRUD.Models
         public string Name { get; set; } = null!;
         public string? Taggeduser { get; set; }
         public Guid? Iduser { get; set; }
-        public DateOnly? Created { get; set; }
+        public DateTime? Created { get; set; }
         public bool? Isactive { get; set; }
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }

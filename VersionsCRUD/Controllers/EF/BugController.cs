@@ -42,7 +42,7 @@ namespace VersionsCRUD.Controllers.EF
 
             var bug = new Bug
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 Description = req.Description,
                 Status = req.Status,
                 //release = releaseDate.ToString(), 
@@ -146,22 +146,22 @@ namespace VersionsCRUD.Controllers.EF
         {
             try
             {
-               // {
-                    //var bugs = await _context.Bugs
-                    //    .Select(b => new BugGetResp
-                    //    {
-                    //        Id = b.Id,
-                    //        Description = b.Description,
-                    //        //Reported = bug.Reported,
-                    //        //Fixed = bug.Fixed,
-                    //        //Status = bug.Status
+                // {
+                //var bugs = await _context.Bugs
+                //    .Select(b => new BugGetResp
+                //    {
+                //        Id = b.Id,
+                //        Description = b.Description,
+                //        //Reported = bug.Reported,
+                //        //Fixed = bug.Fixed,
+                //        //Status = bug.Status
 
 
 
-                    //    })
-                    //    .ToListAsync();
+                //    })
+                //    .ToListAsync();
 
-                    if (!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }

@@ -6,8 +6,6 @@ using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 
 logger.Info("start");
@@ -67,14 +65,34 @@ app.UseHttpsRedirection();
 
     app.UseEndpoints(endpoints =>
     {
-       
         endpoints.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World!");
         });
     });
 
-    app.UseAuthorization();
+//bool useJwt = builder.Configuration.GetValue<bool>("UseJwt");
+//if (useJwt)
+//{
+
+//    builder.Services.AddAuthentication(JwtBearerDefault.AuthenticationScheme)
+//         .AddJwtBearer(options =>
+//         {
+//             options.TokenValidationParameters = new TokenValidationParameters
+//             {
+//                 ValidateIssuer = true,
+//                 ValidateAudience = true,
+//                 ValidateLifetime = true,
+//                 ValidateIssuerSigningKey = true,
+//                 ValidIssuer = Configuration["Jwt:Issuer"],
+//                 ValidAudience = Configuration["Jwt:Audience"],
+//                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]))
+//             };
+//         });
+//}
+
+
+app.UseAuthorization();
 
     app.MapControllers();
 

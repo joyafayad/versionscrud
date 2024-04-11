@@ -9,9 +9,9 @@ namespace VersionsCRUD.Models
         public string Name { get; set; } = null!;
         public string? Description { get; set; }
         public bool? Isactive { get; set; }
-        public DateTime Createddate { get; set; }
+        public DateTime Created { get; set; }
         public Guid Createdby { get; set; }
-        public DateTime Updateddate { get; set; }
+        public DateTime Updated { get; set; }
         public Guid Updatedby { get; set; }
         public Guid? Projectid { get; set; }
 

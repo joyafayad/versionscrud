@@ -36,7 +36,7 @@ namespace VersionsCRUD
                 Id = Guid.NewGuid(),
                 Name = req.Name,
                 Description = req.Description
-                
+
             };
 
             _context.Environments.Add(environment);
@@ -45,7 +45,7 @@ namespace VersionsCRUD
             var resp = new EnvironmentAddResp
             {
                 environmentid = environment.Id,
-                code = 0 
+                code = 0
             };
 
             return Ok(resp);

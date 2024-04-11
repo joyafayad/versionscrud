@@ -70,14 +70,14 @@ namespace VersionsCRUD.Controllers.EF
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(Guid id, ProjectUpdateReq req)
+        public async Task<IActionResult> Update(/*Guid id, */ProjectUpdateReq req)
         {
-            if (id != req.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != req.Id)
+            //{
+            //    return BadRequest();
+            //}
 
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _context.Projects.FindAsync(req.Id);
 
             if (project == null)
             {
@@ -93,7 +93,7 @@ namespace VersionsCRUD.Controllers.EF
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProjectExists(id))
+                if (!ProjectExists(req.Id))
                 {
                     return NotFound();
                 }
@@ -103,7 +103,7 @@ namespace VersionsCRUD.Controllers.EF
                 }
             }
 
-            return NoContent();
+            return Ok();
         }
 
         private bool ProjectExists(Guid id)
@@ -149,7 +149,7 @@ namespace VersionsCRUD.Controllers.EF
 
                 var resp = new ProjectDeleteResp
                 {
-                    code = 0 
+                    code = 0
                 };
 
                 return Ok(resp);

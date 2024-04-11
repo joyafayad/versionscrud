@@ -10,7 +10,7 @@ namespace VersionsCRUD.Models
         public DateOnly? Reported { get; set; }
         public DateOnly? Fixed { get; set; }
         public string? Contributor { get; set; }
-        public DateOnly? Created { get; set; }
+        public DateTime? Created { get; set; }
         public bool? Isactive { get; set; }
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }

@@ -18,7 +18,7 @@ namespace VersionsCRUD.Models
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public DateOnly? Created { get; set; }
+        public DateTime? Created { get; set; }
         public bool? Isactive { get; set; }
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }

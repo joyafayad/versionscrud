@@ -23,7 +23,7 @@ namespace VersionsCRUD.Models
         public virtual DbSet<Document> Documents { get; set; } = null!;
         public virtual DbSet<Environment> Environments { get; set; } = null!;
         public virtual DbSet<Feature> Features { get; set; } = null!;
-        public virtual DbSet<Globaldata> Globaldata { get; set; } = null!;
+        public virtual DbSet<Globaldatum> Globaldata { get; set; } = null!;
         public virtual DbSet<Metadatum> Metadata { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
@@ -55,6 +55,7 @@ namespace VersionsCRUD.Models
                     .HasDefaultValueSql("gen_random_uuid()");
 
                 entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
@@ -94,6 +95,10 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .HasDefaultValueSql("gen_random_uuid()");
+
+                entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("created");
 
                 entity.Property(e => e.Createdby).HasColumnName("createdby");
 
@@ -143,6 +148,7 @@ namespace VersionsCRUD.Models
                     .HasColumnName("contributor");
 
                 entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
@@ -264,12 +270,12 @@ namespace VersionsCRUD.Models
                     .HasColumnName("id")
                     .HasDefaultValueSql("gen_random_uuid()");
 
-                entity.Property(e => e.Createdby).HasColumnName("createdby");
-
-                entity.Property(e => e.Createddate)
+                entity.Property(e => e.Created)
                     .HasColumnType("timestamp without time zone")
-                    .HasColumnName("createddate")
+                    .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
@@ -284,12 +290,12 @@ namespace VersionsCRUD.Models
 
                 entity.Property(e => e.Projectid).HasColumnName("projectid");
 
-                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
-
-                entity.Property(e => e.Updateddate)
+                entity.Property(e => e.Updated)
                     .HasColumnType("timestamp without time zone")
-                    .HasColumnName("updateddate")
+                    .HasColumnName("updated")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.Environments)
@@ -338,7 +344,7 @@ namespace VersionsCRUD.Models
                     .HasConstraintName("fk_feature_project");
             });
 
-            modelBuilder.Entity<Globaldata>(entity =>
+            modelBuilder.Entity<Globaldatum>(entity =>
             {
                 entity.ToTable("globaldata");
 
@@ -350,6 +356,8 @@ namespace VersionsCRUD.Models
                     .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
 
                 entity.Property(e => e.Idlanguage)
                     .HasColumnName("idlanguage")
@@ -366,6 +374,12 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Type)
                     .HasMaxLength(255)
                     .HasColumnName("type");
+
+                entity.Property(e => e.Updated)
+                    .HasColumnType("timestamp without time zone")
+                    .HasColumnName("updated");
+
+                entity.Property(e => e.Updatedby).HasColumnName("updatedby");
 
                 entity.Property(e => e.Value)
                     .HasMaxLength(255)
@@ -416,6 +430,7 @@ namespace VersionsCRUD.Models
                     .HasDefaultValueSql("gen_random_uuid()");
 
                 entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
@@ -526,6 +541,7 @@ namespace VersionsCRUD.Models
                     .HasDefaultValueSql("gen_random_uuid()");
 
                 entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
@@ -567,6 +583,7 @@ namespace VersionsCRUD.Models
                     .HasDefaultValueSql("gen_random_uuid()");
 
                 entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
@@ -608,6 +625,7 @@ namespace VersionsCRUD.Models
                     .HasDefaultValueSql("gen_random_uuid()");
 
                 entity.Property(e => e.Created)
+                    .HasColumnType("timestamp without time zone")
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_DATE");
 
@@ -657,9 +675,7 @@ namespace VersionsCRUD.Models
                     .HasColumnName("created")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                entity.Property(e => e.CreatedBy).HasColumnName("created_by");
-
-                entity.Property(e => e.Createdby1).HasColumnName("createdby");
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
 
                 entity.Property(e => e.FeatureId).HasColumnName("feature_id");
 

@@ -10,7 +10,7 @@ namespace VersionsCRUD.Models
         public Guid? Userid { get; set; }
         public bool? Edit { get; set; }
         public bool? View { get; set; }
-        public DateOnly? Created { get; set; }
+        public DateTime? Created { get; set; }
         public bool? Isactive { get; set; }
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }

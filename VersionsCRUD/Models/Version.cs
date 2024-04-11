@@ -21,11 +21,10 @@ namespace VersionsCRUD.Models
         public string? Link { get; set; }
         public Guid? FeatureId { get; set; }
         public Guid? BugId { get; set; }
-        public Guid? CreatedBy { get; set; }
         public bool? IsMajor { get; set; }
         public bool? IsMinor { get; set; }
         public bool? IsPatch { get; set; }
-        public Guid? Createdby1 { get; set; }
+        public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }
 
         public virtual Project? Project { get; set; }
