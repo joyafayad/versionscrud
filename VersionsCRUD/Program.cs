@@ -45,7 +45,7 @@ if (!app.Environment.IsDevelopment())
 
 
 
-bool enableSwagger = false;
+bool enableSwagger = builder.Configuration.GetValue<bool>("EnableSwagger");
 if (enableSwagger)
 {
 
