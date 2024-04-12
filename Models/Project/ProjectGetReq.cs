@@ -1,6 +1,6 @@
 ﻿using Models.PagingRequest;
 
-namespace Models.Versions
+namespace VersionsCRUD.Project
 {
     public class ProjectGetReq : Paging
     {

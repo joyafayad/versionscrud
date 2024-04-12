@@ -1,9 +1,7 @@
-﻿using Models.PagingRequest;
-
-namespace Models.Environment
+﻿namespace VersionsCRUD.Environment
 {
-    public class EnvironmentGetByIdReq : Paging
+    public class EnvironmentGetByIdReq
     {
-        public Guid Id { get; set; }
+        public Guid? id { get; set; }
     }
 }

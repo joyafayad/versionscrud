@@ -1,7 +1,7 @@
-﻿namespace Models.Environment
+﻿namespace VersionsCRUD.Environment
 {
     public class EnvironmentDeleteReq
     {
-        public Guid Id { get; set; }
+        public Guid? id { get; set; }
     }
 }

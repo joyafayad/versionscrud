@@ -1,10 +1,17 @@
-﻿namespace Models.Environment
-{
-    public class EnvironmentGetResp
-    {
-        public Guid Id;
+﻿using VersionsCRUD.Common;
 
-        public string? projectname { get; set; }
+namespace VersionsCRUD.Environment
+{
+    public class EnvironmentGetResp : CommonResp
+    {
+        public List<EnvironmentGet>? environments { get; set; } = new List<EnvironmentGet>();
+    }
+
+    public class EnvironmentGet
+    {
+        public Guid? id { get; set; }
+        public string? name { get; set; }
         public string? description { get; set; }
+        public Guid? projectid { get; set; }
     }
 }

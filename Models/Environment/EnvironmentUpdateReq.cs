@@ -1,10 +1,10 @@
-﻿namespace Models.Environment
+﻿namespace VersionsCRUD.Environment
 {
     public class EnvironmentUpdateReq
     {
-        public Guid Id { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public Guid projectid { get; set; }
+        public Guid? id { get; set; }
+        public string? name { get; set; }
+        public string? description { get; set; }
+        public Guid? projectid { get; set; }
     }
 }

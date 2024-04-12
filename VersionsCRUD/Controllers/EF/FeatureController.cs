@@ -34,10 +34,14 @@ namespace VersionsCRUD
         [HttpPost]
         public async Task<ActionResult<FeatureAddResp>> Add(FeatureAddReq req)
         {
+            FeatureAddResp resp = new();
 
             if (req == null)
             {
-                return BadRequest("Invalid request");
+                //Handled request null
+                resp.code = 1;
+                resp.message = "Something went wrong. Please try again later ! ";
+                return resp;
             }
 
             // Convert the Release string to a DateTime object
@@ -66,11 +70,11 @@ namespace VersionsCRUD
             await _context.SaveChangesAsync();
 
 
-            var resp = new FeatureAddResp
-            {
-                Id = feature.Id,
-                code = 0 // Assuming success
-            };
+            //var resp = new FeatureAddResp
+            //{
+            //    Id = feature.Id,
+            //    code = 0 // Assuming success
+            //};
 
             return Ok(resp);
         }

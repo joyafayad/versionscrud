@@ -1,7 +1,7 @@
 ﻿using VersionsCRUD.Common;
 using VersionsCRUD.Project;
 
-namespace Models.Versions
+namespace VersionsCRUD.Project
 {
     public class ProjectGetByIdResp : CommonResp
     {

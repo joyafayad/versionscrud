@@ -1,9 +1,9 @@
 ﻿using VersionsCRUD.Common;
 
-namespace Models.Environment
+namespace VersionsCRUD.Environment
 {
     public class EnvironmentAddResp : CommonResp
     {
-        public Guid environmentid {  get; set; }
+        public Guid? id {  get; set; }
     }
 }

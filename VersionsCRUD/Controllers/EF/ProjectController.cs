@@ -162,7 +162,7 @@ namespace VersionsCRUD.Controllers.EF
 
             resp.code = 0;
             resp.message = "Success";
-            return Ok(resp);
+            return resp;
         }
 
         //[HttpPost]

@@ -1,9 +1,12 @@
-﻿namespace Models.Environment
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.Environment
 {
     public class EnvironmentAddReq
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public Guid  projectid { get; set; }
+        [Required]
+        public string? name { get; set; }
+        public string? description { get; set; }
+        public Guid? projectid { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using VersionsCRUD.Common;
 
-namespace Models.Environment
+namespace VersionsCRUD.Environment
 {
     public class EnvironmentDeleteResp : CommonResp
     {
+
     }
 }
