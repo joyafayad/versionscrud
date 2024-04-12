@@ -1,8 +1,9 @@
-﻿namespace VersionsCRUD.Project
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.Project
 {
-    public class ProjectUpdateResp
+    public class ProjectUpdateResp : CommonResp
     {
-        public int code { get; set; }
 
     }
 }

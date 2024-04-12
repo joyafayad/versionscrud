@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using Models.Environment;
-using VersionsCRUD.Common;
 using VersionsCRUD.Models;
 using Environment = VersionsCRUD.Models.Environment;
 

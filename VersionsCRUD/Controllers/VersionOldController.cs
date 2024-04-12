@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using NLog;
 using Npgsql;
 using test.Models;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace VersionsCRUD.Controllers
 {

@@ -2,7 +2,6 @@ using NLog.Web;
 using NLog.Extensions.Logging;
 using VersionsCRUD.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

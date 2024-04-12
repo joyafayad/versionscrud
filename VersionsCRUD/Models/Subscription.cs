@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace VersionsCRUD.Models
+﻿namespace VersionsCRUD.Models
 {
     public partial class Subscription
     {

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using VersionsCRUD.Common;
 
 namespace VersionsCRUD.Models
 
@@ -25,7 +27,19 @@ namespace VersionsCRUD.Models
         {
             try
             {
-                _logger.LogInformation("MyMiddleware executing..");
+                //Get the request path
+                var path = JsonConvert.SerializeObject(httpContext.Request.Path.Value ?? "");
+                
+                //Get the headers
+                var headers = JsonConvert.SerializeObject(httpContext.Request.Headers);
+
+                //Get the Request Body - to be continued
+                //Stream stream = httpContext.Request.Body;
+                //httpContext.Response.Body = new MemoryStream();
+                //string _originalContent = new StreamReader(stream).ReadToEnd();
+
+                var body = "";
+                _logger.LogInformation($"new hit : {path}, headers : {headers}, body : {body}");
 
                // if (httpContext.Request.Headers.TryGetValue("Authorization", out var authHeaderValue))
                // {
@@ -41,13 +55,31 @@ namespace VersionsCRUD.Models
                 //    return;
                 //}
 
-                await _next(httpContext); 
+                await _next(httpContext);
+                //Get the Response Body - to be continued
+                //_logger.LogInformation($"response : {httpContext.Response.Body}");
+
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in MyMiddleware.");
-                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await httpContext.Response.WriteAsync("An unexpected error occurred. Please try again later.");
+                // Log the error
+                _logger.LogError($"An error occurred in MyMiddleware: {ex}");
+                CommonResp errorResp = new();
+                errorResp.code = 1;
+                errorResp.message = "Something went wrong. Please try again later ! ";
+
+                // Serialize error response to JSON
+                var jsonResponse = JsonConvert.SerializeObject(errorResp);
+
+                // Set content type header
+                httpContext.Response.ContentType = "application/json";
+
+                // Write JSON response to the response stream
+                await httpContext.Response.WriteAsync(jsonResponse);
+
+                //Another way
+                //httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                //await httpContext.Response.WriteAsync("An unexpected error occurred. Please try again later.");
             }
         }
     }

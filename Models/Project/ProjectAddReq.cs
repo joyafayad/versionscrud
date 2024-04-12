@@ -2,6 +2,6 @@
 {
     public class ProjectAddReq
     {
-        public string? Name { get; set; }
+        public string? name { get; set; }
     }
 }

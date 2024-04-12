@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Models;
 using Models.Versions;
-using test.Models;
+using System.Linq;
+using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 using VersionsCRUD.Project;
 
@@ -16,7 +14,6 @@ namespace VersionsCRUD.Controllers.EF
     public class ProjectController : ControllerBase
     {
         private readonly postgresContext _context;
-
 
         public ProjectController(postgresContext context)
         {
@@ -30,80 +27,88 @@ namespace VersionsCRUD.Controllers.EF
 
             if (req == null)
             {
-                return BadRequest();
+                //Handled request null
+                resp.code = 1;
+                resp.message = "Something went wrong. Please try again later ! ";
+                return resp;
             }
+
+            //To Handle project already added same name
 
             var project = new VersionsCRUD.Models.Project();
             project.Id = Guid.NewGuid(); // Generate a new GUID for the project
-            project.Name = req.Name;
+            project.Name = req.name;
 
             _context.Projects.Add(project);
             await _context.SaveChangesAsync();
 
             resp.id = project.Id;
             resp.code = 0;
+            resp.message = "Success";
             return resp;
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<ProjectGetResp>>> Get(ProjectGetByIdReq req)
+        public async Task<ProjectGetResp> Get(ProjectGetReq req)
         {
-            //var projects = await _context.Projects
-            //    .Select(p => new ProjectGetResp
-            //    {
-            //        ID = p.Id,
-            //        name = p.Name
-            //    })
-            //    .ToListAsync();
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            ProjectGetResp resp = new();
 
-            var projects = await _context.Projects
+            List<VersionsCRUD.Models.Project> projectsDb = await _context.Projects
            .Skip((req.pagenumber - 1) * req.pagesize)
            .Take(req.pagesize)
            .ToListAsync();
 
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingProject>();
+            });
+            var mapper = config.CreateMapper();
 
-            return Ok(projects);
+            // Map the projects to DTOs
+            resp.projects = mapper.Map<List<VersionsCRUD.Models.Project>, List<ProjectGet>>(projectsDb);
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(/*Guid id, */ProjectUpdateReq req)
+        public async Task<ActionResult<ProjectUpdateResp>> Update(ProjectUpdateReq req)
         {
-            //if (id != req.Id)
-            //{
-            //    return BadRequest();
-            //}
-
-            var project = await _context.Projects.FindAsync(req.Id);
+            ProjectUpdateResp resp = new();
+            var project = await _context.Projects.FindAsync(req.id);
 
             if (project == null)
             {
-                return NotFound();
+                //Handled project not found
+                resp.code = 10;
+                resp.message = "Project Not Found";
+                return resp;
             }
-            project.Id = req.Id;
-            project.Name = req.Name;
+            project.Id = req.id;
+            project.Name = req.name;
 
-            try
-            {
-                _context.Projects.Update(project);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProjectExists(req.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //try
+            //{
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!ProjectExists(req.Id))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
 
-            return Ok();
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
         private bool ProjectExists(Guid id)
@@ -112,54 +117,53 @@ namespace VersionsCRUD.Controllers.EF
         }
 
         [HttpPost]
-
-        public async Task<ActionResult<ProjectGetResp>> GetById(ProjectGetByIdReq req)
+        public async Task<ActionResult<ProjectGetByIdResp>> GetById(ProjectGetByIdReq req)
         {
-            var project = await _context.Projects.FindAsync(req.Id);
+            ProjectGetByIdResp resp = new();
+            VersionsCRUD.Models.Project project = await _context.Projects.FindAsync(req.id);
 
             if (project == null)
             {
-                return NotFound();
+                //Handled project not found
+                resp.code = 10;
+                resp.message = "Project Not Found";
+                return resp;
             }
 
-            var projectResp = new ProjectGetResp
+            resp.project = new ProjectGet
             {
-                ID = project.Id,
+                id = project.Id,
                 name = project.Name,
-
             };
 
-            return Ok(projectResp);
+            resp.code = 0;
+            resp.message = "Success";
+
+            return resp;
         }
 
         [HttpPost]
         public async Task<ActionResult<ProjectDeleteResp>> Delete(ProjectDeleteReq req)
         {
-            try
+            ProjectDeleteResp resp = new();
+
+            var project = await _context.Projects.FindAsync(req.id);
+
+            if (project == null)
             {
-                var project = await _context.Projects.FindAsync(req.Id);
-
-                if (project == null)
-                {
-                    return NotFound("Project not found");
-                }
-
-                _context.Projects.Remove(project);
-                await _context.SaveChangesAsync();
-
-                var resp = new ProjectDeleteResp
-                {
-                    code = 0
-                };
-
-                return Ok(resp);
+                //Handled project not found
+                resp.code = 10;
+                resp.message = "Project Not Found";
+                return resp;
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error deleting project: {ex.Message}");
-            }
+
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return Ok(resp);
         }
-
 
         //[HttpPost]
         //public async Task<ActionResult<LoadDataResponse>> LoadData()

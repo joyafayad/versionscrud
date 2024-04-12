@@ -1,10 +1,15 @@
-﻿namespace VersionsCRUD.Project
-{
-    public class ProjectGetResp
-    {
-        public int code { get; set; }
+﻿using VersionsCRUD.Common;
 
-        public Guid ID { get; set; }
-        public string name { get; set; }
+namespace VersionsCRUD.Project
+{
+    public class ProjectGetResp : CommonResp
+    {
+        public List<ProjectGet>? projects { get; set; } = new List<ProjectGet>();
+    }
+
+    public class ProjectGet
+    {
+        public Guid id { get; set; }
+        public string? name { get; set; }
     }
 }

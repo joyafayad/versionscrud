@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Models.Versions;
 using test.Models;
 using VersionsCRUD.Models;
-using Version = VersionsCRUD.Models.Version;
 
 namespace VersionsCRUD.Controllers
 {
@@ -32,7 +31,10 @@ namespace VersionsCRUD.Controllers
 
             if (req == null)
             {
-                return BadRequest();
+                //Handled request null
+                resp.code = 1;
+                resp.message = "Something went wrong. Please try again later ! ";
+                return resp;
             }
 
             var version = new VersionsCRUD.Models.Version();
@@ -78,11 +80,6 @@ namespace VersionsCRUD.Controllers
         [HttpPost]
         public async Task<ActionResult<VersionUpdateResp>> Update(VersionUpdateReq req)
         {
-            // if (Id != req.id)
-            {
-                return BadRequest();
-            }
-
             var version = await _context.Versions.FindAsync(req.Id);
 
             if (version == null)

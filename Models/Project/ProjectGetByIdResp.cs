@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VersionsCRUD.Common;
+using VersionsCRUD.Project;
 
 namespace Models.Versions
 {
-    public class ProjectGetByIdResp
+    public class ProjectGetByIdResp : CommonResp
     {
-        public Guid ID { get; set; }
-
-        public Guid? ProjectID { get; set; }
-
-        public string VersionNumber { get; set; }
-        public int code { get; set; }
+        public ProjectGet? project { get; set; }
     }
 }

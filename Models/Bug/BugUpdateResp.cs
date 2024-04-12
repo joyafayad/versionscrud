@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VersionsCRUD.Common;
 
 namespace Models.Bug
 {
-    public class BugUpdateResp
+    public class BugUpdateResp : CommonResp
     {
-        public int code {  get; set; }
+        //public int code {  get; set; }
     }
 }

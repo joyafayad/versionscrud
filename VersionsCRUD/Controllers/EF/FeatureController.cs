@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models;
 using Models.Feature;
 using NLog;
-using test.Models;
 using VersionsCRUD.Models;
 
 namespace VersionsCRUD

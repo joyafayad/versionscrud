@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models.PagingRequest;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Models.Versions
 {
-    public class ProjectGetByIdReq : Paging
+    public class ProjectGetByIdReq
     {
         [Required(ErrorMessage = "Id is required")]
-        public Guid Id { get; set; }
+        public Guid id { get; set; }
        
     }
 }
