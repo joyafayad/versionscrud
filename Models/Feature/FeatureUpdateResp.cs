@@ -1,7 +1,9 @@
-﻿namespace VersionsCRUD
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.Feature
 {
-    public class FeaturesUpdateResp
+    public class FeatureUpdateResp : CommonResp
     {
-        public int code { get; set; }
+
     }
 }

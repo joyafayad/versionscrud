@@ -1,7 +1,10 @@
-﻿namespace VersionsCRUD
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.Feature
 {
     public class FeatureDeleteReq
     {
-        public int Id {  get; set; }
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id {  get; set; }
     }
 }

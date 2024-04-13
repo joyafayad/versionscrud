@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models;
-using Models.User;
+using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
+using VersionsCRUD.User;
 
 namespace VersionsCRUD.Controllers.EF
 {
-
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class UserController : ControllerBase
@@ -21,172 +21,136 @@ namespace VersionsCRUD.Controllers.EF
         [HttpPost]
         public async Task<ActionResult<UserAddResp>> Add(UserAddReq req)
         {
-            try
+            UserAddResp resp = new();
+
+            if (req == null)
             {
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-
-                var user = new User
-                {
-                    Id = Guid.NewGuid(),
-                    Username = req.Username,
-                    Email = req.Email,
-                    Password = req.Password,
-                    // Created = DateTime.UtcNow,
-                    Isactive = true
-                };
-
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-
-                var resp = new UserAddResp
-                {
-                    Id = user.Id,
-                    code = 0
-                };
-
-                return Ok(resp);
+                //Handled request null
+                resp.code = 1;
+                resp.message = "Something went wrong. Please try again later ! ";
+                return resp;
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while adding the user: " + ex.Message);
-            }
+
+            var user = new VersionsCRUD.Models.User();
+            user.Id = Guid.NewGuid(); // Generate a new GUID for the project
+            user.Username = req.username;
+            user.Email = req.email;
+            user.Password = req.password;
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            resp.id = user.Id;
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<UserGetResp>>> Get(UserGetByIdReq req)
+        public async Task<ActionResult<UserGetResp>> Get(UserGetReq req)
         {
-            //try
-            //{
-            //    var users = await _context.Users
-            //        .Select(u => new UserGetResp
-            //        {
-            //            Id = u.Id,
-            //            Username = u.Username,
-            //            Email = u.Email,
-            //            // Created = u.Created,
-            //            //IsActive = u.Isactive
-            //        })
-            //        .ToListAsync();
+            UserGetResp resp = new();
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var users = await _context.Users
+            List<VersionsCRUD.Models.User> usersDb = await _context.Users
            .Skip((req.pagenumber - 1) * req.pagesize)
            .Take(req.pagesize)
            .ToListAsync();
 
-            return Ok(users);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, "An error occurred while retrieving users: " + ex.Message);
-            //}
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingUser>();
+            });
+            var mapper = config.CreateMapper();
+
+            // Map the projects to DTOs
+            resp.users = mapper.Map<List<VersionsCRUD.Models.User>, List<UserGet>>(usersDb);
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
         [HttpPost]
         public async Task<ActionResult<UserUpdateResp>> Update(UserUpdateReq req)
         {
-            try
+            UserUpdateResp resp = new();
+            var user = await _context.Users.FindAsync(req.id);
+
+            if (user == null)
             {
-                var user = await _context.Users.FindAsync(req.Id);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                user.Username = req.Username;
-                user.Email = req.Email;
-                user.Password = req.Password;
-
-                _context.Users.Update(user);
-                await _context.SaveChangesAsync();
-
-                var resp = new UserUpdateResp
-                {
-                    Code = 0
-                };
-
-                return Ok(resp);
+                //Handled user not found
+                resp.code = 14;
+                resp.message = "User Not Found";
+                return resp;
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating user: " + ex.Message);
-            }
+
+            user.Username = req.username;
+            user.Email = req.email;
+            user.Password = req.password;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
         [HttpPost]
         public async Task<ActionResult<UserDeleteResp>> Delete(UserDeleteReq req)
         {
-            try
+            UserDeleteResp resp = new();
+            var user = await _context.Users.FindAsync(req.id);
+
+            if (user == null)
             {
-                var user = await _context.Users.FindAsync(req.Id);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                _context.Users.Remove(user);
-                await _context.SaveChangesAsync();
-
-                var resp = new UserDeleteResp
-                {
-                    Code = 0
-                };
-
-                return Ok(resp);
+                //Handled user not found
+                resp.code = 14;
+                resp.message = "User Not Found";
+                return resp;
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while deleting the user: " + ex.Message);
-            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
         [HttpPost]
-        public async Task<ActionResult<UserGetResp>> GetUserById(UserGetByIdReq req)
+        public async Task<ActionResult<UserGetByIdResp>> GetById(UserGetByIdReq req)
         {
-            try
+            UserGetByIdResp resp = new();
+            var user = await _context.Users.FindAsync(req.id);
+
+            if (user == null)
             {
-                var user = await _context.Users.FindAsync(req.Id);
-
-                if (user == null)
-                {
-                    return NotFound();
-                }
-
-                var userGetResp = new UserGetResp
-                {
-                    Id = user.Id,
-                    Username = user.Username,
-                    Email = user.Email,
-
-                };
-
-                return Ok(userGetResp);
+                //Handled user not found
+                resp.code = 14;
+                resp.message = "User Not Found";
+                return resp;
             }
-            catch (Exception ex)
+
+            resp.user = new UserGet
             {
-                return StatusCode(500, "An error occurred while retrieving the user: " + ex.Message);
-            }
+                id = user.Id,
+                username = user.Username,
+                email = user.Email,
+                password = user.Password,
+            };
+
+            resp.code = 0;
+            resp.message = "Success";
+
+            return resp;
         }
 
         [HttpPost]
         public IActionResult Login(LoginRequest request)
         {
-
             var user = _context.Users.FirstOrDefault(u => u.Username == request.Username);
-
 
             if (user != null && VerifyPassword(request.Password, user.Password))
             {
@@ -195,7 +159,6 @@ namespace VersionsCRUD.Controllers.EF
                 //user.Lastlogin = DateTime.UtcNow;
                 _context.SaveChanges();
                 var token = GenerateToken(user);
-
 
                 return Ok(new { code = 0, token });
             }
@@ -213,8 +176,7 @@ namespace VersionsCRUD.Controllers.EF
             return enteredPassword == storedPassword;
         }
 
-
-        private string GenerateToken(User user)
+        private string GenerateToken(VersionsCRUD.Models.User user)
         {
 
             return "dummy_token";

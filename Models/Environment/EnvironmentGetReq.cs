@@ -1,8 +1,8 @@
-﻿using Models.PagingRequest;
+﻿using VersionsCRUD.Paging;
 
 namespace VersionsCRUD.Environment
 {
-    public class EnvironmentGetReq : Paging
+    public class EnvironmentGetReq : PagingReq
     {
 
     }

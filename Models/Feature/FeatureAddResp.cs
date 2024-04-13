@@ -1,10 +1,10 @@
 ﻿using VersionsCRUD.Common;
 
-namespace VersionsCRUD
+namespace VersionsCRUD.Feature
 {
     public class FeatureAddResp : CommonResp
     {
-        public Guid Id { get; set; }
+        public Guid? id { get; set; }
        
     }
 }

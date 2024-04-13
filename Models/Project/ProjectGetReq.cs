@@ -1,8 +1,8 @@
-﻿using Models.PagingRequest;
+﻿using VersionsCRUD.Paging;
 
 namespace VersionsCRUD.Project
 {
-    public class ProjectGetReq : Paging
+    public class ProjectGetReq : PagingReq
     {
         
     }

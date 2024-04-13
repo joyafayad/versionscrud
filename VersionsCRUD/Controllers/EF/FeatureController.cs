@@ -1,36 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models.Feature;
 using NLog;
+using VersionsCRUD.Feature;
+using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 
-namespace VersionsCRUD
+namespace VersionsCRUD.Controllers.EF
 {
-
     [ApiController]
     [Route("api/[controller]/[action]")]
 
     public class FeatureController : ControllerBase
     {
         private readonly postgresContext _context;
-        private object releaseDate;
-        private object _feature;
-        private readonly ILogger<FeatureController> _logger;
-
-
 
         public FeatureController(postgresContext context)
         {
-
             _context = context;
         }
 
-        private static Logger GetLogger(Logger logger)
-        {
-            return logger;
-        }
-
-        // POST: /feature/add
         [HttpPost]
         public async Task<ActionResult<FeatureAddResp>> Add(FeatureAddReq req)
         {
@@ -44,153 +33,123 @@ namespace VersionsCRUD
                 return resp;
             }
 
-            // Convert the Release string to a DateTime object
-            if (!DateTime.TryParse(req.Release, out DateTime Release))
-            {
+            //plz ma77e hode w tab2e mtl reported taba3 l bug
 
-                var errorResponse = new FeatureAddResp
-                {
-                    code = 5,
-                    message = "Invalid release date format"
-                };
-                return Ok(errorResponse);
-            }
-
-            var feature = new Feature
-            {
-                Id = Guid.NewGuid(),
-                Name = req.Name,
-                Description = req.Description,
-                //Release = (DateOnly?)releaseDate, //discuss about it
-                Created = DateTime.UtcNow,
-                Isactive = true
-            };
+            var feature = new VersionsCRUD.Models.Feature();
+            feature.Id = Guid.NewGuid(); // Generate a new GUID for the project
+            feature.Name = req.name;
+            feature.Description = req.description;
+            //feature.Release = (DateOnly?)req.release; //check
 
             _context.Features.Add(feature);
             await _context.SaveChangesAsync();
 
-
-            //var resp = new FeatureAddResp
-            //{
-            //    Id = feature.Id,
-            //    code = 0 // Assuming success
-            //};
-
-            return Ok(resp);
+            resp.id = feature.Id;
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
-        // POST: /feature/get
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<FeatureGetResp>>> Get(FeatureGetByIdReq req)
+        public async Task<ActionResult<FeatureGetResp>> Get(FeatureGetReq req)
         {
-            //var features = await _context.Features.ToListAsync();
+            FeatureGetResp resp = new();
 
-            //if (features == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return Ok(features.Select(f => new FeatureGetResp
-            //{
-            //    Id = f.Id,
-            //    Name = f.Name,
-            //    Description = f.Description,
-            //    // Release = f.Release?.ToUniversalTime() //check it
-            //}));
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var features = await _context.Features
+            List<VersionsCRUD.Models.Feature> featuresDb = await _context.Features
            .Skip((req.pagenumber - 1) * req.pagesize)
            .Take(req.pagesize)
            .ToListAsync();
 
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingFeature>();
+            });
+            var mapper = config.CreateMapper();
 
-            return Ok(features);
+            // Map the projects to DTOs
+            resp.features = mapper.Map<List<VersionsCRUD.Models.Feature>, List<FeatureGet>>(featuresDb);
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
-
-        // POST: /feature/update
         [HttpPost]
-        public async Task<ActionResult<FeaturesUpdateResp>> Update(FeaturesUpdateReq req)
+        public async Task<ActionResult<FeatureUpdateResp>> Update(FeaturesUpdateReq req)
         {
-            var feature = await _context.Features.FindAsync(req.Id);
+            FeatureUpdateResp resp = new();
+            var feature = await _context.Features.FindAsync(req.id);
 
             if (feature == null)
             {
-                return NotFound();
+                //Handled feature not found
+                resp.code = 13;
+                resp.message = "Feature Not Found";
+                return resp;
+            }
+            
+            feature.Name = req.name;
+            feature.Description = req.description;
+            //feature.Release = req.release;
+
+            _context.Features.Update(feature);
+            await _context.SaveChangesAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<FeatureGetByIdResp>> GetById(FeatureGetByIdReq req)
+        {
+            FeatureGetByIdResp resp = new();
+            var feature = await _context.Features.FindAsync(req.id);
+
+            if (feature == null)
+            {
+                //Handled feature not found
+                resp.code = 13;
+                resp.message = "Feature Not Found";
+                return resp;
             }
 
-            feature.Name = req.Name;
-
-            try
+            resp.feature = new FeatureGet
             {
-                _context.Features.Update(feature);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
-            }
-
-            var resp = new FeaturesUpdateResp
-            {
-                code = 0
+                id = feature.Id,
+                name = feature.Name,
+                description = feature.Description,
+                //release = feature.Release,
             };
 
-            return Ok(resp);
+            resp.code = 0;
+            resp.message = "Success";
+
+            return resp;
         }
 
-
-        // POST: /feature/getbyid
         [HttpPost]
-        public async Task<ActionResult<FeatureGetResp>> GetById(FeatureGetByIdReq req)
+        public async Task<ActionResult<FeatureDeleteResp>> Delete(FeatureDeleteReq req)
         {
-
-            var feature = await _context.Features.FindAsync(req.Id);
-
+            FeatureDeleteResp resp = new();
+            var feature = await _context.Features.FindAsync(req.id);
 
             if (feature == null)
             {
-                return NotFound();
+                //Handled feature not found
+                resp.code = 13;
+                resp.message = "Feature Not Found";
+                return resp;
             }
-
-
-            var featureResp = new FeatureGetResp
-            {
-                Id = feature.Id,
-                Name = feature.Name,
-                Description = feature.Description,
-                // Release = feature.Release,
-
-            };
-
-            return Ok(featureResp);
-        }
-
-
-        [HttpPost]//check 
-        public async Task<IActionResult> Delete(FeatureDeleteReq req)
-        {
-
-            var feature = await _context.Features.FindAsync(req.Id);
-
-
-            if (feature == null)
-            {
-                return NotFound();
-            }
-
 
             _context.Features.Remove(feature);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
-
-
 
         //[HttpPost]
         //public async Task<ActionResult<LoadDataResponse>> LoadData(object _logger)
@@ -216,12 +175,5 @@ namespace VersionsCRUD
         //    }
         //}
 
-
-
     }
 }
-
-
-
-
-

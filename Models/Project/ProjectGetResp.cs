@@ -10,7 +10,7 @@ namespace VersionsCRUD.Project
 
     public class ProjectGet
     {
-        public Guid id { get; set; }
+        public Guid? id { get; set; }
         public string? name { get; set; }
        
     }

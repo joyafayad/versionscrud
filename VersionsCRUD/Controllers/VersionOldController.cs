@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NLog;
 using Npgsql;
-using test.Models;
+using VersionsCRUD.Version;
 
 namespace VersionsCRUD.Controllers
 {
@@ -20,9 +20,9 @@ namespace VersionsCRUD.Controllers
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger(); // Initialize NLog logger
 
         [HttpPost]
-        public FeatutreAddResp Add(VersionAddReq req )
+        public VersionAddResp Add(VersionAddReq req )
         {
-            FeatutreAddResp resp = new();
+            VersionAddResp resp = new();
             string connectionString = "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=postgres;";
             try
             {
@@ -84,8 +84,8 @@ namespace VersionsCRUD.Controllers
                                 VersionGetResp version = new VersionGetResp
                                 {
                                   //  ID = Convert.ToInt32(reader["id"]),
-                                    ProjectID = Guid.Parse(reader["projectid"].ToString()),
-                                    VersionNumber = reader["versionnumber"].ToString()
+                                    //ProjectID = Guid.Parse(reader["projectid"].ToString()),
+                                    //VersionNumber = reader["versionnumber"].ToString()
                                 };
 
                                 versions.Add(version);
@@ -126,7 +126,7 @@ namespace VersionsCRUD.Controllers
                     {
                         cmd.Parameters.AddWithValue("@projectid", req.projectId);
                         cmd.Parameters.AddWithValue("@versionnumber", req.versionNumber);
-                        cmd.Parameters.AddWithValue("@id", req.Id);
+                        cmd.Parameters.AddWithValue("@id", req.id);
                         int rowsAffected = cmd.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
@@ -169,13 +169,13 @@ namespace VersionsCRUD.Controllers
                     using (var cmd = new NpgsqlCommand(updateSql, conn))
                     {
                        
-                        cmd.Parameters.AddWithValue("@id", req.Id);
+                        cmd.Parameters.AddWithValue("@id", req.id);
                         int rowsAffected = cmd.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
                             resp.code = 0; // Success
-                            resp.idVersion = req.Id;
+                            //resp.id = req.id;
                         }
                         else
                         {

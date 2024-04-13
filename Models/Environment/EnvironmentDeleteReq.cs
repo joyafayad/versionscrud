@@ -1,7 +1,10 @@
-﻿namespace VersionsCRUD.Environment
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.Environment
 {
     public class EnvironmentDeleteReq
     {
-        public Guid? id { get; set; }
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
     }
 }

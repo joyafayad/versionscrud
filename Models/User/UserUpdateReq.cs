@@ -1,10 +1,15 @@
-﻿namespace Models.User
+﻿using DataAnnotationsExtensions;
+using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.User
 {
     public class UserUpdateReq
     {
-        public Guid Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
+        public string? username { get; set; }
+        [Email]
+        public string? email { get; set; }
+        public string? password { get; set; }
     }
 }

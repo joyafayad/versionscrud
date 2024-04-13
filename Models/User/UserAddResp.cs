@@ -1,10 +1,9 @@
 ﻿using VersionsCRUD.Common;
 
-namespace Models.User
+namespace VersionsCRUD.User
 {
     public class UserAddResp : CommonResp
     {
-        public Guid Id { get; set; }
-       
+        public Guid? id { get; set; }
     }
 }

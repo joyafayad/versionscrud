@@ -1,13 +1,9 @@
-﻿namespace Models.Feature
-{
-    public class FeatureGetByIdResp
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string? Description { get; set; }
-        public DateOnly? Release { get; set; }
-        public DateTime? Created { get; set; }
-        public bool? Isactive { get; set; }
+﻿using VersionsCRUD.Common;
 
+namespace VersionsCRUD.Feature
+{
+    public class FeatureGetByIdResp : CommonResp
+    {
+        public FeatureGet? feature { get; set; }
     }
 }

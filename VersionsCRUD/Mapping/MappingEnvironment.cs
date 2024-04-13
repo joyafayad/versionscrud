@@ -1,5 +1,5 @@
-﻿using VersionsCRUD.Environment;
-using AutoMapper;
+﻿using AutoMapper;
+using VersionsCRUD.Environment;
 
 namespace VersionsCRUD.Mapping
 {

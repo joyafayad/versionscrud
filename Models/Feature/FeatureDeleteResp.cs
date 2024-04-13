@@ -1,7 +1,9 @@
-﻿namespace VersionsCRUD
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.Feature
 {
-    public class FeatureDeleteResp
+    public class FeatureDeleteResp : CommonResp
     {
-        public int code {  get; set; }
+
     }
 }

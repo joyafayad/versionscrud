@@ -1,10 +1,10 @@
-﻿using Models.PagingRequest;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Models.User
+namespace VersionsCRUD.User
 {
-    public class UserGetByIdReq : Paging
+    public class UserGetByIdReq
     {
-        public Guid Id { get; set; }
-        
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
     }
 }

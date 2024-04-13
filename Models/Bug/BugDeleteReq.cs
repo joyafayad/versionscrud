@@ -1,7 +1,10 @@
-﻿namespace Models.Bug
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.Bug
 {
     public class BugDeleteReq
     {
-        public Guid Id { get; set; }
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using VersionsCRUD.Common;
 
-namespace Models.Bug
+namespace VersionsCRUD.Bug
 {
     public class BugAddResp : CommonResp
     {
-        public Guid Id { get; set; }
-       
+        public Guid? id { get; set; }
     }
 }

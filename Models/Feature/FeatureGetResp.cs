@@ -1,14 +1,17 @@
-﻿namespace VersionsCRUD
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.Feature
 {
-    public class FeatureGetResp
+    public class FeatureGetResp : CommonResp
+    {
+        public List<FeatureGet>? features { get; set; } = new List<FeatureGet>();
+    }
 
-    { 
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public string? Description { get; set; }
-            //public DateTime? Release { get; set; }
-           
-        
-
+    public class FeatureGet
+    {
+        public Guid? id { get; set; }
+        public string? name { get; set; }
+        public string? description { get; set; }
+        public string? release { get; set; }
     }
 }

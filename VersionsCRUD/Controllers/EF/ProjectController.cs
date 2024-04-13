@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models.Versions;
-using System.Linq;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 using VersionsCRUD.Project;
@@ -90,34 +88,16 @@ namespace VersionsCRUD.Controllers.EF
                 resp.message = "Project Not Found";
                 return resp;
             }
+
             project.Id = req.id;
             project.Name = req.name;
 
-            //try
-            //{
             _context.Projects.Update(project);
             await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!ProjectExists(req.Id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
 
             resp.code = 0;
             resp.message = "Success";
             return resp;
-        }
-
-        private bool ProjectExists(Guid id)
-        {
-            return _context.Projects.Any(e => e.Id == id);
         }
 
         [HttpPost]
@@ -169,26 +149,5 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<LoadDataResponse>> LoadData()
-        //{
-        //    try
-        //    {
-        //        var projects = await _context.Projects
-        //            .Select(p => new ProjectLoadDataResponse { Id = p.Id, name = p.Name })
-        //            .ToListAsync();
-        //        var response = new LoadDataResponse
-        //        {
-        //            Projects = projects,
-        //        };
-
-        //        return Ok(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while loading data.");
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while loading data.");
-        //    }
-        //}
     }
 }

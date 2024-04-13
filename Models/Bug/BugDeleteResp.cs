@@ -1,7 +1,9 @@
-﻿namespace Models.Bug
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.Bug
 {
-    public class BugDeleteResp
+    public class BugDeleteResp : CommonResp
     {
-        public int code { get; set; }
+
     }
 }
