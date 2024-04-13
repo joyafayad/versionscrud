@@ -1,8 +1,13 @@
-﻿namespace VersionsCRUD
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.Feature
 {
     public class FeaturesUpdateReq
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
+        public string? name { get; set; }
+        public string? description { get; set; }
+        public string? release { get; set; }
     }
 }

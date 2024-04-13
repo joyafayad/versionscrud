@@ -1,10 +1,14 @@
-﻿namespace Models.Bug
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.Bug
 {
     public class BugUpdateReq
     {
-        public Guid Id { get; set; }
-        public string Description { get; set; }
-        public int Status { get; set; }
-        public  string Fixed {  get; set; }
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
+        public string? description { get; set; }
+        public int status { get; set; }
+        //public string? release { get; set; }
+        //public string Fixed {  get; set; }
     }
 }

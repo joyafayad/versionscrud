@@ -1,9 +1,9 @@
 ﻿using VersionsCRUD.Common;
 
-namespace Models.Bug
+namespace VersionsCRUD.Bug
 {
     public class BugUpdateResp : CommonResp
     {
-        //public int code {  get; set; }
+
     }
 }

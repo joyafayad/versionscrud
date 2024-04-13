@@ -1,12 +1,10 @@
-﻿using Models.PagingRequest;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Models.Bug
+namespace VersionsCRUD.Bug
 {
-    public class BugGetByIdReq:Paging
+    public class BugGetByIdReq
     {
-        public Guid Id { get; set; }
-        
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
     }
-
-
 }

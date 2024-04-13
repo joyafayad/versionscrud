@@ -1,7 +1,10 @@
-﻿namespace Models.User
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace VersionsCRUD.User
 {
     public class UserDeleteReq
     {
-        public Guid Id { get; set; }
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
     }
 }

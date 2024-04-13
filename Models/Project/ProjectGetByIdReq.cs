@@ -6,6 +6,5 @@ namespace VersionsCRUD.Project
     {
         [Required(ErrorMessage = "Id is required")]
         public Guid id { get; set; }
-       
     }
 }

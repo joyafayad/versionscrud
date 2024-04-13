@@ -4,8 +4,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using VersionsCRUD.Common;
 
-namespace VersionsCRUD.Models
-
+namespace VersionsCRUD.Middleware
 {
     public class MyMiddleware
     {
@@ -18,15 +17,13 @@ namespace VersionsCRUD.Models
             _logger = logFactory.CreateLogger("MyMiddleware");
            // _tokenService = tokenService;
         }
-        //public async Task Invoke(HttpContext httpContext)
-        //{
-        //    _logger.LogInformation("MyMiddleware executing..");
-        //    await _next(httpContext); // calling next middleware
-        //}
+
         public async Task Invoke(HttpContext httpContext)
         {
             try
             {
+                //To Handle : handle each validation of a data annotation return code 2 - Input Validation Failed
+
                 //Get the request path
                 var path = JsonConvert.SerializeObject(httpContext.Request.Path.Value ?? "");
                 

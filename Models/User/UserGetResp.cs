@@ -1,12 +1,17 @@
-﻿namespace Models.User
-{
+﻿using VersionsCRUD.Common;
 
-    public class UserGetResp
+namespace VersionsCRUD.User
+{
+    public class UserGetResp : CommonResp
     {
-        public Guid Id { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public DateOnly? Created { get; set; }
-        public bool? IsActive { get; set; }
+        public List<UserGet>? users { get; set; } = new List<UserGet>();
+    }
+
+    public class UserGet
+    {
+        public Guid? id { get; set; }
+        public string? username { get; set; }
+        public string? email { get; set; }
+        public string? password { get; set; }
     }
 }

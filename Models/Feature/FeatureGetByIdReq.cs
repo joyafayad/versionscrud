@@ -1,10 +1,10 @@
-﻿using Models.PagingRequest;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Models.Feature
+namespace VersionsCRUD.Feature
 {
-    public class FeatureGetByIdReq : Paging
+    public class FeatureGetByIdReq
     {
-        public Guid Id { get; set; }
-       
+        [Required(ErrorMessage = "Id is required")]
+        public Guid id { get; set; }
     }
 }

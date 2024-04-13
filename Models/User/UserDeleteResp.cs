@@ -1,7 +1,9 @@
-﻿namespace Models.User
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.User
 {
-    public class UserDeleteResp
+    public class UserDeleteResp : CommonResp
     {
-        public int Code { get; set; }
+
     }
 }

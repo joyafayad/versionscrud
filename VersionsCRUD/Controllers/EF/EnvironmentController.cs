@@ -5,7 +5,7 @@ using VersionsCRUD.Environment;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 
-namespace VersionsCRUD
+namespace VersionsCRUD.Controllers.EF
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
@@ -37,7 +37,8 @@ namespace VersionsCRUD
             {
                 Id = Guid.NewGuid(),
                 Name = req.name,
-                Description = req.description
+                Description = req.description,
+                Projectid = req.projectid
             };
 
             _context.Environments.Add(environment);
@@ -152,6 +153,20 @@ namespace VersionsCRUD
                 description = environment.Description,
                 projectid = environment.Projectid,
             };
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<EnvironmentLoadDataResp>> LoadData()
+        {
+            EnvironmentLoadDataResp resp = new();
+
+            resp.projects = await _context.Projects
+                    .Select(p => new ProjectResp { id = p.Id, name = p.Name })
+                    .ToListAsync();
 
             resp.code = 0;
             resp.message = "Success";

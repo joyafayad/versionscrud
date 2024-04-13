@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models.Bug;
+using VersionsCRUD.Bug;
+using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 
 namespace VersionsCRUD.Controllers.EF
 {
-
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class BugController : ControllerBase
@@ -17,7 +18,22 @@ namespace VersionsCRUD.Controllers.EF
             _context = context;
         }
 
-        // POST: /bug/add
+        static bool IsValidDateFormat(string input)
+        {
+            // Here you can implement your own logic for validating date format
+            // This example assumes the date format is YYYY-MM-DD
+            return System.Text.RegularExpressions.Regex.IsMatch(input, @"^\d{4}-\d{2}-\d{2}$");
+        }
+
+        /// <summary>
+        /// Add a new bug
+        /// </summary>
+        /// <param name="req">request</param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<BugAddResp>> Add(BugAddReq req)
         {
@@ -31,190 +47,134 @@ namespace VersionsCRUD.Controllers.EF
                 return resp;
             }
 
-            // Convert the Release string to a DateTime object
-            //if (!DateTime.TryParse(req.Release, out DateTime releaseDate))
-            //{
-            //    var errorResponse = new BugAddResp
-            //    {
-            //        code = 5,
-            //        Message = "Invalid release date format"
-            //    };
-            //    return Ok(errorResponse);
-            //}
-
-
-            var bug = new Bug
+            DateOnly dateReported;
+            if (string.IsNullOrEmpty(req.reported))
             {
-                //Id = Guid.NewGuid(),
-                Description = req.Description,
-                Status = req.Status,
-                //release = releaseDate.ToString(), 
+                //If Reported Date is not provided --> Fill by today's date
+                req.reported = DateTime.Today.ToString("yyyy-MM-dd");
+            }
+            //To validate that format is yyyy-MM-dd
+            if (!DateOnly.TryParse(req.reported, out dateReported))
+            {
+                //We are converting the string to DateOnly by this method
+                resp.code = 6;
+                resp.message = "Invalid reported date format";
+                return resp;
+            }
 
-            };
+            var bug = new VersionsCRUD.Models.Bug();
+            bug.Id = Guid.NewGuid(); // Generate a new GUID for the project
+            bug.Description = req.description;
+            bug.Status = req.status;
+            bug.Reported = dateReported;
 
             _context.Bugs.Add(bug);
             await _context.SaveChangesAsync();
 
-            //var resp = new BugAddResp
-            //{
-            //    Id = bug.Id,
-            //    code = 0
-            //};
-
-            return Ok(resp);
-
-
-
-
+            resp.id = bug.Id;
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
-
-
 
         [HttpPost]
         public async Task<ActionResult<BugUpdateResp>> Update(BugUpdateReq req)
         {
-            try
+            BugUpdateResp resp = new();
+            var bug = await _context.Bugs.FindAsync(req.id);
+
+            if (bug == null)
             {
-                var bug = await _context.Bugs.FindAsync(req.Id);
-
-                if (bug == null)
-                {
-                    return NotFound();
-                }
-
-                bug.Description = req.Description;
-                bug.Status = req.Status;
-
-                _context.Bugs.Update(bug);
-                await _context.SaveChangesAsync();
-
-                //if (DateTime.TryParse(req.Fixed, out DateTime fixedDate))
-                //{
-                //    bug.Fixed = fixedDate;
-                //}
-                //else
-                //{
-                //    // Handle invalid date format
-                //    var errorResponse = new BugUpdateResp
-                //    {
-                //        code = 5, 
-                //    };
-                //    return BadRequest(errorResponse);
-                //}
-
-
-                var resp = new BugUpdateResp
-                {
-                    code = 0
-                };
-
-                return Ok(resp);
+                //Handled bug not found
+                resp.code = 12;
+                resp.message = "Bug Not Found";
+                return resp;
             }
-            catch (Exception ex)
-            {
 
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error updating bug: " + ex.Message);
-            }
+            bug.Description = req.description;
+            bug.Status = req.status;
+
+            _context.Bugs.Update(bug);
+            await _context.SaveChangesAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
         [HttpPost]
         public async Task<ActionResult<BugDeleteResp>> Delete(BugDeleteReq req)
         {
-            try
+            BugDeleteResp resp = new();
+            var bug = await _context.Bugs.FindAsync(req.id);
+
+            if (bug == null)
             {
-                var bug = await _context.Bugs.FindAsync(req.Id);
-
-                if (bug == null)
-                {
-                    return NotFound();
-                }
-
-                _context.Bugs.Remove(bug);
-                await _context.SaveChangesAsync();
-
-                var resp = new BugDeleteResp
-                {
-                    code = 0
-                };
-
-                return Ok(resp);
+                //Handled bug not found
+                resp.code = 12;
+                resp.message = "Bug Not Found";
+                return resp;
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting bug: " + ex.Message);
-            }
-        }
-        [HttpPost]
-        public async Task<ActionResult<IEnumerable<BugGetResp>>> Get(BugGetByIdReq req)
-        {
-            try
-            {
-                // {
-                //var bugs = await _context.Bugs
-                //    .Select(b => new BugGetResp
-                //    {
-                //        Id = b.Id,
-                //        Description = b.Description,
-                //        //Reported = bug.Reported,
-                //        //Fixed = bug.Fixed,
-                //        //Status = bug.Status
 
+            _context.Bugs.Remove(bug);
+            await _context.SaveChangesAsync();
 
-
-                //    })
-                //    .ToListAsync();
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var bugs = await _context.Bugs
-                    .Skip((req.pagenumber - 1) * req.pagesize)
-                    .Take(req.pagesize)
-                    .ToListAsync();
-
-                return Ok(bugs);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "An error occurred while retrieving bugs: " + ex.Message);
-            }
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<BugGetResp>> Get(BugGetReq req)
+        {
+            BugGetResp resp = new();
+
+            List<VersionsCRUD.Models.Bug> bugsDb = await _context.Bugs
+           .Skip((req.pagenumber - 1) * req.pagesize)
+           .Take(req.pagesize)
+           .ToListAsync();
+
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingBug>();
+            });
+            var mapper = config.CreateMapper();
+
+            // Map the projects to DTOs
+            resp.bugs = mapper.Map<List<VersionsCRUD.Models.Bug>, List<BugGet>>(bugsDb);
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
 
         [HttpPost]
-        public async Task<ActionResult<BugGetResp>> GetById(BugGetByIdReq req)
+        public async Task<ActionResult<BugGetByIdResp>> GetById(BugGetByIdReq req)
         {
-            try
+            BugGetByIdResp resp = new();
+            var bug = await _context.Bugs.FindAsync(req.id);
+
+            if (bug == null)
             {
-
-                var bug = await _context.Bugs.FindAsync(req.Id);
-
-                if (bug == null)
-                {
-                    return NotFound("Bug not found");
-                }
-
-
-                var bugResponse = new BugGetResp
-                {
-                    Id = bug.Id,
-                    Description = bug.Description,
-                    //Reported = bug.Reported,
-                    //Fixed = bug.Fixed,
-                    //Status = bug.Status
-
-                };
-
-
-                return Ok(bugResponse);
+                //Handled bug not found
+                resp.code = 12;
+                resp.message = "Bug Not Found";
+                return resp;
             }
-            catch (Exception ex)
+
+            resp.bug = new BugGet
             {
+                id = bug.Id,
+                description = bug.Description,
+                status = bug.Status.Value,
+                reported = bug.Reported.ToString(), //Convert
+            };
 
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error retrieving bug: {ex.Message}");
-            }
+            resp.code = 0;
+            resp.message = "Success";
+
+            return resp;
         }
 
         //[HttpPost]
@@ -260,28 +220,6 @@ namespace VersionsCRUD.Controllers.EF
         //        //  Console.WriteLine($"{data.Name}: {data.Value}");
         //    }
         //}
+    
     }
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

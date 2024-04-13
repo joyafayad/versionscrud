@@ -1,5 +1,5 @@
-﻿using VersionsCRUD.Project;
-using AutoMapper;
+﻿using AutoMapper;
+using VersionsCRUD.Project;
 
 namespace VersionsCRUD.Mapping
 {

@@ -1,7 +1,9 @@
-﻿namespace Models.User
+﻿using VersionsCRUD.Common;
+
+namespace VersionsCRUD.User
 {
-    public class UserUpdateResp
+    public class UserUpdateResp : CommonResp
     {
-        public int Code { get; set; }
+
     }
 }
