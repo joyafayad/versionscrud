@@ -54,7 +54,8 @@ namespace VersionsCRUD.Controllers.EF
             ProjectGetResp resp = new();
 
             List<VersionsCRUD.Models.Project> projectsDb = await _context.Projects
-           .Skip((req.pagenumber - 1) * req.pagesize)
+           
+          .Skip((req.pagenumber - 1) * req.pagesize)
            .Take(req.pagesize)
            .ToListAsync();
 
@@ -67,10 +68,13 @@ namespace VersionsCRUD.Controllers.EF
 
             // Map the projects to DTOs
             resp.projects = mapper.Map<List<VersionsCRUD.Models.Project>, List<ProjectGet>>(projectsDb);
+            
+
 
             resp.code = 0;
             resp.message = "Success";
             return resp;
+        
         }
 
         [HttpPost]
