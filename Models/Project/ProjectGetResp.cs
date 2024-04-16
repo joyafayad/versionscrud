@@ -1,11 +1,12 @@
-﻿using VersionsCRUD.Common;
+﻿using Models.Common;
+using VersionsCRUD.Common;
 
 namespace VersionsCRUD.Project
 {
-    public class ProjectGetResp : CommonResp
+    public class ProjectGetResp : CommonGetResp
     {
         public List<ProjectGet>? projects { get; set; } = new List<ProjectGet>();
-       
+        public int totalCount { get; set; }
     }
 
     public class ProjectGet

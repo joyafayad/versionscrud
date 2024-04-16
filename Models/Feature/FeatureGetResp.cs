@@ -1,10 +1,12 @@
-﻿using VersionsCRUD.Common;
+﻿using Models.Common;
+using VersionsCRUD.Common;
 
 namespace VersionsCRUD.Feature
 {
-    public class FeatureGetResp : CommonResp
+    public class FeatureGetResp : CommonGetResp
     {
         public List<FeatureGet>? features { get; set; } = new List<FeatureGet>();
+        public int totalCount { get; set; }
     }
 
     public class FeatureGet

@@ -18,6 +18,15 @@ namespace VersionsCRUD.Controllers.EF
             _context = context;
         }
 
+        /// <summary>
+        /// add a new environment
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         // POST: /environment/add
         [HttpPost]
         public async Task<ActionResult<EnvironmentAddResp>> Add(EnvironmentAddReq req)
@@ -50,6 +59,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// get a list of environment
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<EnvironmentGetResp>> Get(EnvironmentGetReq req)
         {
@@ -77,7 +95,7 @@ namespace VersionsCRUD.Controllers.EF
 
             // Map the environments to DTOs
             resp.environments = mapper.Map<List<VersionsCRUD.Models.Environment>, List<EnvironmentGet>>(environmentsDb);
-           
+            resp.totalCount = resp.environments.Count;
 
 
             resp.code = 0;
@@ -85,6 +103,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// update environment
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<EnvironmentUpdateResp>> Update(EnvironmentUpdateReq req)
         {
@@ -112,6 +139,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// delete an environemnet
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<EnvironmentDeleteResp>> Delete(EnvironmentDeleteReq req)
         {
@@ -134,6 +170,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// getbyid an environment
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<EnvironmentGetByIdResp>> GetById(EnvironmentGetByIdReq req)
         {

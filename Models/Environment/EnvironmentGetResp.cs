@@ -1,11 +1,12 @@
-﻿using VersionsCRUD.Common;
+﻿using Models.Common;
+using VersionsCRUD.Common;
 
 namespace VersionsCRUD.Environment
 {
-    public class EnvironmentGetResp : CommonResp
+    public class EnvironmentGetResp : CommonGetResp
     {
         public List<EnvironmentGet>? environments { get; set; } = new List<EnvironmentGet>();
-        
+        public int totalCount { get; set; }
     }
 
     public class EnvironmentGet

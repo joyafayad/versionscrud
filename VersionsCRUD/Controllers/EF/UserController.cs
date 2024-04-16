@@ -18,6 +18,15 @@ namespace VersionsCRUD.Controllers.EF
             _context = context;
         }
 
+        /// <summary>
+        /// add a user
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<UserAddResp>> Add(UserAddReq req)
         {
@@ -46,6 +55,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// get a list of user
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<UserGetResp>> Get(UserGetReq req)
         {
@@ -65,12 +83,22 @@ namespace VersionsCRUD.Controllers.EF
 
             // Map the projects to DTOs
             resp.users = mapper.Map<List<VersionsCRUD.Models.User>, List<UserGet>>(usersDb);
+            resp.totalCount = resp.users.Count;
 
             resp.code = 0;
             resp.message = "Success";
             return resp;
         }
 
+        /// <summary>
+        /// update a user
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<UserUpdateResp>> Update(UserUpdateReq req)
         {
@@ -97,6 +125,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// delete a user
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<UserDeleteResp>> Delete(UserDeleteReq req)
         {
@@ -119,6 +156,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// getbyid a user
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<UserGetByIdResp>> GetById(UserGetByIdReq req)
         {

@@ -1,10 +1,12 @@
-﻿using VersionsCRUD.Common;
+﻿using Models.Common;
+using VersionsCRUD.Common;
 
 namespace VersionsCRUD.Bug
 {
-    public class BugGetResp : CommonResp
+    public class BugGetResp : CommonGetResp
     {
         public List<BugGet>? bugs { get; set; } = new List<BugGet>();
+        public int totalCount { get; set; }
     }
 
     public class BugGet

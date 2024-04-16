@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VersionsCRUD.Environment;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 using VersionsCRUD.Version;
@@ -18,6 +19,15 @@ namespace VersionsCRUD.Controllers.EF
             _context = context;
         }
 
+        /// <summary>
+        /// add a version
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<VersionAddResp>> Add(VersionAddReq req)
         {
@@ -47,6 +57,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// get a list of version
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<VersionGetResp>> Get(VersionGetReq req)
         {
@@ -66,12 +85,21 @@ namespace VersionsCRUD.Controllers.EF
 
             // Map the projects to DTOs
             resp.versions = mapper.Map<List<VersionsCRUD.Models.Version>, List<VersionGet>>(versionsDb);
-
+            resp.totalCount = resp.versions.Count;
             resp.code = 0;
             resp.message = "Success";
             return resp;
         }
 
+        /// <summary>
+        /// update a version
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<VersionUpdateResp>> Update(VersionUpdateReq req)
         {
@@ -97,6 +125,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// delete a version
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<VersionDeleteResp>> Delete(VersionDeleteReq req)
         {
@@ -119,6 +156,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// getbyid a list of version
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<VersionGetByIdResp>> GetById(VersionGetByIdReq req)
         {
@@ -145,6 +191,24 @@ namespace VersionsCRUD.Controllers.EF
 
             return resp;
         }
+        [HttpPost]
+        public async Task<ActionResult<BugLoadDataResp>> LoadData()
+        {
+            BugLoadDataResp resp = new();
+            resp.projects = await _context.Projects
+                .Select(b => new BugResp { id = b.Id, name = b.Name })
+                .ToListAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
+
 
     }
+
+
+
+
+    
 }

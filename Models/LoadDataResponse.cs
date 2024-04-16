@@ -1,29 +1,30 @@
-﻿namespace VersionsCRUD
+﻿using VersionsCRUD.Common;
+using VersionsCRUD.Environment;
+
+namespace VersionsCRUD.Version
 {
-    public class LoadDataResponse
+    public class VersionLoadDataResp : CommonResp
     {
-        public List<ProjectLoadDataResponse> Projects { get; set; }
-        public List<FeatureLoadDataResponse> Features { get; set; }
-        public List<BugLoadDataResponse> Bugs { get; set; }
+        public List<ProjectResp>? projects { get; set; } = new List<ProjectResp>();
+        public List<EnvironmentResp>? environments { get; set; } = new List<EnvironmentResp>();
+        public List<FeatureResp>? features { get; set; } = new List<FeatureResp>();
+        public List<BugResp>? bugs { get; set; } = new List<BugResp>();
     }
-    public class ProjectLoadDataResponse
-    {
 
-        public Guid Id { get; set; }
+    public class FeatureResp
+    {
+        public Guid? id { get; set; }
         public string? name { get; set; }
     }
-
-    public class FeatureLoadDataResponse
+    public class EnvironmentResp
     {
-
-        public Guid Id { get; set; }
+        public Guid? id { get; set; }
+        public string? name { get; set; }
+        public Guid? projectId { get; set; } //make sure to return this w ma77e l comment hyda cava
+    }
+    public class BugResp
+    {
+        public Guid? id { get; set; }
         public string? name { get; set; }
     }
-    public class BugLoadDataResponse
-    {
-
-        public Guid Id { get; set; }
-        public string? description { get; set; }
-    }
-
 }

@@ -77,6 +77,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// update a bug
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<BugUpdateResp>> Update(BugUpdateReq req)
         {
@@ -102,6 +111,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// delete a bug
+        /// </summary>
+        /// <param name="req"></param>
+        ///  /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<BugDeleteResp>> Delete(BugDeleteReq req)
         {
@@ -124,6 +142,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// get a list of bug
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<BugGetResp>> Get(BugGetReq req)
         {
@@ -143,12 +170,22 @@ namespace VersionsCRUD.Controllers.EF
 
             // Map the projects to DTOs
             resp.bugs = mapper.Map<List<VersionsCRUD.Models.Bug>, List<BugGet>>(bugsDb);
+            resp.totalCount = resp.bugs.Count;
 
             resp.code = 0;
             resp.message = "Success";
             return resp;
         }
 
+        /// <summary>
+        /// getbyid a bug
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<BugGetByIdResp>> GetById(BugGetByIdReq req)
         {
@@ -177,28 +214,7 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<LoadDataResponse>> LoadData()
-        //{
-        //    try
-        //    {
-        //        var bugs = await _context.Bugs
-        //       .Select(b => new BugLoadDataResponse{ Id = b.Id, description = b.Description })
-        //       .ToListAsync();
-
-        //        var response = new LoadDataResponse
-        //        {
-        //            Bugs = bugs
-        //        };
-
-        //        return Ok(response);
-        //    }
-        //       catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while loading data.");
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while loading data.");
-        //    }
-        //}
+        
 
         //public void PrintBugStatus() // fkre aamel class jdide
         //{

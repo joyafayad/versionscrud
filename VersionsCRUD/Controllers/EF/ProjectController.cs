@@ -18,6 +18,15 @@ namespace VersionsCRUD.Controllers.EF
             _context = context;
         }
 
+        /// <summary>
+        /// add a new project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<ProjectAddResp>> Add(ProjectAddReq req)
         {
@@ -46,6 +55,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// get a list of project
+        /// </summary>
+        /// <param name="req"></param>
+        ///  <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ProjectGetResp> Get(ProjectGetReq req)
         {
@@ -66,7 +84,7 @@ namespace VersionsCRUD.Controllers.EF
 
             // Map the projects to DTOs
             resp.projects = mapper.Map<List<VersionsCRUD.Models.Project>, List<ProjectGet>>(projectsDb);
-            
+            resp.totalCount = resp.projects.Count;
 
 
             resp.code = 0;
@@ -75,6 +93,15 @@ namespace VersionsCRUD.Controllers.EF
         
         }
 
+        /// <summary>
+        /// update a project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<ProjectUpdateResp>> Update(ProjectUpdateReq req)
         {
@@ -100,6 +127,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// getbyid a project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<ProjectGetByIdResp>> GetById(ProjectGetByIdReq req)
         {
@@ -126,6 +162,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// delete a project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<ProjectDeleteResp>> Delete(ProjectDeleteReq req)
         {

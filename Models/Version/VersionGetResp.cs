@@ -1,10 +1,12 @@
-﻿using VersionsCRUD.Common;
+﻿using Models.Common;
+using VersionsCRUD.Common;
 
 namespace VersionsCRUD.Version
 {
-    public class VersionGetResp : CommonResp
+    public class VersionGetResp : CommonGetResp
     {
         public List<VersionGet>? versions { get; set; } = new List<VersionGet>();
+        public int totalCount { get; set; }
     }
 
     public class VersionGet

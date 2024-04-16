@@ -20,6 +20,15 @@ namespace VersionsCRUD.Controllers.EF
             _context = context;
         }
 
+        /// <summary>
+        /// add a new feature
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<FeatureAddResp>> Add(FeatureAddReq req)
         {
@@ -33,13 +42,26 @@ namespace VersionsCRUD.Controllers.EF
                 return resp;
             }
 
-            //plz ma77e hode w tab2e mtl reported taba3 l bug
+            DateOnly dateRelease;
+            if (string.IsNullOrEmpty(req.release))
+            {
+                //If Release Date is not provided --> Fill by today's date
+                req.release = DateTime.Today.ToString("yyyy-MM-dd");
+            }
+            //To validate that format is yyyy-MM-dd
+            if (!DateOnly.TryParse(req.release, out dateRelease))
+            {
+                //We are converting the string to DateOnly by this method
+                resp.code = 6;
+                resp.message = "Invalid reported date format";
+                return resp;
+            }
 
             var feature = new VersionsCRUD.Models.Feature();
             feature.Id = Guid.NewGuid(); // Generate a new GUID for the project
             feature.Name = req.name;
             feature.Description = req.description;
-            //feature.Release = (DateOnly?)req.release; //check
+            feature.Release = dateRelease;
 
             _context.Features.Add(feature);
             await _context.SaveChangesAsync();
@@ -50,6 +72,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// get a list of feature
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<FeatureGetResp>> Get(FeatureGetReq req)
         {
@@ -69,12 +100,22 @@ namespace VersionsCRUD.Controllers.EF
 
             // Map the projects to DTOs
             resp.features = mapper.Map<List<VersionsCRUD.Models.Feature>, List<FeatureGet>>(featuresDb);
+            resp.totalCount = resp.features.Count;
 
             resp.code = 0;
             resp.message = "Success";
             return resp;
         }
 
+        /// <summary>
+        /// update a feature
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<FeatureUpdateResp>> Update(FeaturesUpdateReq req)
         {
@@ -101,6 +142,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// getbyid a feature
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<FeatureGetByIdResp>> GetById(FeatureGetByIdReq req)
         {
@@ -129,6 +179,15 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
+        /// <summary>
+        /// delete a feature
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<FeatureDeleteResp>> Delete(FeatureDeleteReq req)
         {
@@ -151,29 +210,6 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<LoadDataResponse>> LoadData(object _logger)
-        //{
-        //    try
-        //    {
-        //        var features = await _context.Features
-        //       .Select(f => new FeatureLoadDataResponse { Id = f.Id, name = f.Name })
-        //       .ToListAsync();
-
-
-        //        var response = new LoadDataResponse
-        //        {
-        //            Features = features,
-
-        //        };
-        //        return Ok(response);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred while loading data.");
-        //        return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while loading data.");
-        //    }
-        //}
-
+       
     }
 }
