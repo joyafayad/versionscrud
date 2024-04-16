@@ -5,6 +5,7 @@ using NLog;
 using VersionsCRUD.Feature;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
+using VersionsCRUD.Project;
 
 namespace VersionsCRUD.Controllers.EF
 {
@@ -210,6 +211,18 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
-       
+        [HttpPost]
+        public async Task<ActionResult<FeatureLoadDataResp>> LoadData()
+        {
+            FeatureLoadDataResp resp = new();
+            resp.projects = await _context.Projects
+                .Select(b => new ProjectResp { id = b.Id, name = b.Name })
+                .ToListAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
+
     }
 }

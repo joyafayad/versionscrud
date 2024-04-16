@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VersionsCRUD.Bug;
 using VersionsCRUD.Environment;
+using VersionsCRUD.Feature;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
+using VersionsCRUD.Project;
 using VersionsCRUD.Version;
 
 namespace VersionsCRUD.Controllers.EF
@@ -191,12 +194,22 @@ namespace VersionsCRUD.Controllers.EF
 
             return resp;
         }
+
         [HttpPost]
-        public async Task<ActionResult<BugLoadDataResp>> LoadData()
+        public async Task<ActionResult<VersionLoadDataResp>> LoadData()
         {
-            BugLoadDataResp resp = new();
+            VersionLoadDataResp resp = new();
             resp.projects = await _context.Projects
-                .Select(b => new BugResp { id = b.Id, name = b.Name })
+                .Select(b => new ProjectResp { id = b.Id, name = b.Name })
+                .ToListAsync();
+            resp.environments = await _context.Environments
+                .Select(b => new EnvironmentResp { id = b.Id, name = b.Name })
+                .ToListAsync();
+            resp.features = await _context.Features
+                .Select(b => new FeatureResp { id = b.Id, name = b.Name })
+                .ToListAsync();
+            resp.bugs = await _context.Bugs
+                .Select(b => new BugResp { id = b.Id, name = b.Description })
                 .ToListAsync();
 
             resp.code = 0;
@@ -204,11 +217,6 @@ namespace VersionsCRUD.Controllers.EF
             return resp;
         }
 
-
     }
-
-
-
-
     
 }

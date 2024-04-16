@@ -187,6 +187,10 @@ namespace VersionsCRUD.Controllers.EF
             }
 
             _context.Projects.Remove(project);
+
+            //var environments = _context.Environments.Where();
+            //_context.Environments.Remove(enviroments);
+            
             await _context.SaveChangesAsync();
 
             resp.code = 0;
