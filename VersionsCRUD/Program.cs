@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
@@ -16,10 +17,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
+	c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+	var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+	var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+	c.IncludeXmlComments(xmlPath);
 });
 
 builder.Services.AddDbContext<postgresContext>(options =>
@@ -30,10 +31,20 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddLogging(loggingBuilder =>
 {
-    loggingBuilder.ClearProviders();
-    loggingBuilder.AddNLog();
+	loggingBuilder.ClearProviders();
+	loggingBuilder.AddNLog();
 });
 
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+	options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+	options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+}).AddCookie(options =>
+{
+	options.ExpireTimeSpan = TimeSpan.FromHours(24);
+	options.LoginPath = "/Login";
+});
 
 var app = builder.Build();
 
@@ -44,9 +55,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+	app.UseExceptionHandler("/Error");
+	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+	app.UseHsts();
 }
 
 
@@ -55,29 +66,35 @@ bool enableSwagger = builder.Configuration.GetValue<bool>("EnableSwagger");
 if (enableSwagger)
 {
 
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-    });
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+
+	});
 }
 
 
 
 app.UseHttpsRedirection();
-    app.UseStaticFiles();
+app.UseStaticFiles();
 
-    app.UseRouting();
+app.UseRouting();
 
-    app.UseMyMiddleware();
+app.UseMyMiddleware();
 
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapGet("/", async context =>
-        {
-            await context.Response.WriteAsync("Hello world!");
-        });
-    });
+//app.UseEndpoints(endpoints =>
+//{
+//    //endpoints.MapGet("/", async context =>
+//    //{
+//    //    await context.Response.WriteAsync("Hello world!");
+//    //});
+
+//});
+
+app.MapControllerRoute(
+	name: "default",
+	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 //bool useJwt = builder.Configuration.GetValue<bool>("UseJwt");
 //if (useJwt)
@@ -100,10 +117,11 @@ app.UseHttpsRedirection();
 //}
 
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-    app.MapControllers();
+app.MapControllers();
 
-    app.MapRazorPages();
+app.MapRazorPages();
 
-    app.Run(); 
+app.Run();

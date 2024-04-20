@@ -7,6 +7,10 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\assets\css\nav.css" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
@@ -34,7 +38,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\" />
+	  <Folder Include="wwwroot\assets\js\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\assets\css\login.css" />
+	  <None Include="wwwroot\assets\css\nav.css" />
+	  <None Include="wwwroot\assets\css\site.css" />
 	</ItemGroup>
 
 </Project>

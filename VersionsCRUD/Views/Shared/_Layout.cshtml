@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> My ASP.NET Application</title>
+
+	<link rel="stylesheet" href=@Url.Content("~/assets/css/site.css") type="text/css" />
+
+</head>
+<body>
+
+	@if (User.Identity.IsAuthenticated)
+	{
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			@{
+				await Html.RenderPartialAsync("_LeftMenu");
+			}
+		</div>
+	}
+	
+	<div class="container body-content">
+		@RenderBody()
+	</div>
+
+	@RenderSection("scripts", required: false)
+</body>
+</html>

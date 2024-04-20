@@ -1,0 +1,39 @@
+﻿@{
+	@model LoginViewModel
+
+}
+<link rel="stylesheet" href=@Url.Content("~/assets/css/login.css") type="text/css" />
+
+<div class="login">
+	<form class="login-form" id="login-form" method="post" action="Login/Login">
+		<h1 style="text-align:center">Sign In To Admin</h1>
+		<div class="col-12">
+			<input name="username" type="text" size="60" maxlength="100" placeholder="Username" required />
+		</div>
+		<div class="col-12">
+			<input name="password" type="Password" size="60" maxlength="100" placeholder="Password" required />
+		</div>
+		<div class="col-12" style="text-align:end">
+			<a href="#" class="forgot-password">Forget Password?</a>
+		</div>
+		<div class="col-12">
+			
+			<button type="submit" >Sign In</button>
+		</div>
+	</form>
+</div>
+
+
+@* @using (Html.BeginForm("LoginAsync", "Login", FormMethod.Post))
+{
+	<div class="form-group">
+		@Html.LabelFor(m => m.username)
+		@Html.TextBoxFor(model => model.username, new { @class = "form-control" })
+		@Html.LabelFor(m => m.password)
+		@Html.TextBoxFor(model => model.password, new { @class = "form-control" })
+	</div>
+
+	// form is postback to /Home/Enroll
+	<input type="submit" value="Login" class="btn" />
+}
+ *@
