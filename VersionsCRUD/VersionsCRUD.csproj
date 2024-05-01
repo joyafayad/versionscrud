@@ -38,10 +38,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="wwwroot\assets\js\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Include="wwwroot\assets\css\login.css" />
 	  <None Include="wwwroot\assets\css\nav.css" />
 	  <None Include="wwwroot\assets\css\site.css" />

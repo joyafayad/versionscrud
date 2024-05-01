@@ -1,0 +1,43 @@
+﻿@using VersionsCRUD.Views.Project
+@model TableDataViewModel
+<link rel="stylesheet" href=@Url.Content("~/assets/css/site.css") type="text/css" />
+
+<table id="example" class="display" >
+	<thead>
+		<tr>
+			<th>username</th>
+			<th>Position</th>
+			<th>Office</th>
+			<th>Extension</th>
+			<th>Start date</th>
+			<th>Salary</th>
+			
+		</tr>
+	</thead>
+	<tbody id="table-body">
+		@{
+			 var tableData = Model.TableData;
+			 //ViewData["TableData"] as string[][];
+			
+		}
+		@foreach (var rowData in tableData)
+		{
+			<tr>
+				@foreach (var cell in rowData)
+				{
+					<td>@Html.Raw(cell)</td>
+				}
+			</tr>
+		}
+	@* <tr>
+		<button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;">
+			<span class="bi bi pencil" aria-hidden="true"></span>
+		</button> *@
+		@* <button type="button" class="btn btn-danger btn-xs dt-delete">
+			<span class="bi bi remove" aria-hidden="true"></span>
+		</button> *@
+	@* </tr> *@
+	</tbody>
+</table>
+
+<script src="@Url.Content("~/assets/js/Project/main.js")"></script>

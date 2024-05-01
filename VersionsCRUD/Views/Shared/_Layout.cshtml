@@ -6,6 +6,7 @@
 	<title> My ASP.NET Application</title>
 
 	<link rel="stylesheet" href=@Url.Content("~/assets/css/site.css") type="text/css" />
+	<link rel="stylesheet" href=@Url.Content("~/assets/link/dataTables.css") type="text/css" />
 
 </head>
 <body>
@@ -18,11 +19,15 @@
 			}
 		</div>
 	}
-	
+
 	<div class="container body-content">
 		@RenderBody()
 	</div>
 
+	<script src="@Url.Content("~/assets/link/jquery-3.6.0.min.js")"></script>
+	<script src="@Url.Content("~/assets/link/dataTables.js")"></script>
+
 	@RenderSection("scripts", required: false)
+
 </body>
 </html>
