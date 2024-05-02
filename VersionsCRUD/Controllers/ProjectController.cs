@@ -1,30 +1,58 @@
 ﻿using System.Net.NetworkInformation;
 using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
+using VersionsCRUD.Models;
+using VersionsCRUD.Project;
 using VersionsCRUD.Views.Project;
-	
+
+
+
 namespace VersionsCRUD.Controllers
 {
 	[Authorize]
 	public class ProjectController : Controller
 	{
-		public IActionResult Index()
+
+		private readonly postgresContext _context;
+
+
+		public ProjectController(postgresContext context)
 		{
-			var model = new TableDataViewModel
+			_context = context;
+		}
+
+		public async Task<IActionResult> Index()
+		{
+
+			var projectsDb = await _context.Projects.ToListAsync();
+
+			// Configure AutoMapper
+			var config = new MapperConfiguration(cfg =>
 			{
-				TableData = new List<string[]>
-				{
-					new string[] {"Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$3,120",},
-					new string[] {"Garrett Winters", "Director", "Edinburgh", "8422", "2011/07/25", "$5,300"}
-				}
+				cfg.CreateMap<VersionsCRUD.Models.Project, ProjectGet>();
+			});
+			var mapper = config.CreateMapper();
+
+			// Map the projects to DTOs
+			var projectsDto = mapper.Map<List<ProjectGet>>(projectsDb);
+
+			// Create the response object
+			var resp = new ProjectGetResp
+			{
+				projects = projectsDto,
+				totalCount = projectsDto.Count
 			};
-			ViewData["TableData"] = model;
-			return View(model);
-			//ViewData["username"] = User.FindFirstValue("test");
-			//return View();
+
+			return View(resp);
 		}
 	}
-	
+	//ViewData["username"] = User.FindFirstValue("test");
+	//return View();
 }
+	
+
+	
+
