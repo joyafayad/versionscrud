@@ -10,16 +10,16 @@
 //    });
 //});
 
-//document.addEventListener("DOMContentLoaded", function () {
-//    var tableData = [
-//        ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$3,120", "<button>edit</button>", "<button>delete</button>"],
-//        ["Garrett Winters", "Director", "Edinburgh", "8422", "2011/07/25", "$5,300", "",""]
-//    ];
-//    // Populate the table body with the data
-//    var table = $('#example').DataTable({
-//        data: tableData
-//    });
-//});
+document.addEventListener("DOMContentLoaded", function () {
+    var tableData = [
+        ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$3,120", "<button>edit</button>", "<button>delete</button>"],
+        ["Garrett Winters", "Director", "Edinburgh", "8422", "2011/07/25", "$5,300", "",""]
+    ];
+    // Populate the table body with the data
+    var table = $('#example').DataTable({
+        data: tableData
+    });
+});
 
 //document.addEventListener("DOMContentLoaded", function () {
 //        $this = $(this);
