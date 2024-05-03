@@ -15,5 +15,6 @@ namespace VersionsCRUD.Environment
         public string? name { get; set; }
         public string? description { get; set; }
         public Guid? projectid { get; set; }
+        public string? projectName { get; set; }
     }
 }

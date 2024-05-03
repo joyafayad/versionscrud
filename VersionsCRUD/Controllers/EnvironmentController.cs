@@ -18,12 +18,16 @@ namespace VersionsCRUD.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			var environmentsDb = await _context.Environments.ToListAsync();
+			//var environmentsDb = await _context.Environments.ToListAsync();
+			var environmentsDb = await _context.Environments
+			.Include(e => e.Project) // Assuming 'Project' is the navigation property to the Project table
+			.ToListAsync();
 
 			// Configure AutoMapper
 			var config = new MapperConfiguration(cfg =>
 			{
-				cfg.CreateMap<VersionsCRUD.Models.Environment, EnvironmentGet>();
+				cfg.CreateMap<VersionsCRUD.Models.Environment, EnvironmentGet>()
+				.ForMember(dest => dest.projectName, opt => opt.MapFrom(src => src.Project.Name)); // Map project name
 			});
 			var mapper = config.CreateMapper();
 
