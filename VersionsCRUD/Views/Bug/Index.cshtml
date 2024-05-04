@@ -1,0 +1,23 @@
+﻿@using VersionsCRUD.Bug
+@model BugGetResp
+<link rel="stylesheet" href="@Url.Content("~/assets/css/site.css")" type="text/css" />
+
+<table id="example" class=" table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Reported</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bug in Model.bugs)
+        {
+            <tr>
+                <td>@bug.description</td>
+                <td>@bug.status</td>
+                <td>@bug.reported</td>
+            </tr>
+        }
+    </tbody>
+</table>
