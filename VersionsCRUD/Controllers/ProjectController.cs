@@ -231,11 +231,20 @@ namespace VersionsCRUD.Controllers
 			resp.message = "Success";
 			return resp;
 		}
-	}
-	//ViewData["username"] = User.FindFirstValue("test");
-	//return View();
-}
-	
 
-	
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+    }
+    //ViewData["username"] = User.FindFirstValue("test");
+    //return View();
+
+   
+
+}
+
+
+
 

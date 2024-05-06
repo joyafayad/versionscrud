@@ -5,7 +5,7 @@
 
 <div class="row">
 	<div class="col-md-6">
-		<button class="Add" onclick="Add('@project.id')">Add</button>
+		<a href="/Project/Create" class="Add">Add</a>
 	</div>
 </div>
 
@@ -113,24 +113,6 @@
 
 			
 		// 	popup.style.display = 'block';
-
-		function addProject(projectData) {
-			$.ajax({
-				url: '/api/Project/Add',
-				type: 'POST',
-				contentType: 'application/json',
-				data: JSON.stringify(projectData),
-				success: function (result) {
-					console.log(result);
-					alert(result.message);
-					location.reload();
-				},
-				error: function (xhr, status, error) {
-					console.error(xhr.responseText);
-					alert('Error adding project: ' + xhr.responseText);
-				}
-			});
-		}
 
 
 	</script>
