@@ -8,6 +8,8 @@ using VersionsCRUD.Project;
 
 namespace VersionsCRUD.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public class FeatureController : Controller
     {
         private readonly postgresContext _context;
@@ -244,6 +246,11 @@ namespace VersionsCRUD.Controllers
             return resp;
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
     }
 }
 

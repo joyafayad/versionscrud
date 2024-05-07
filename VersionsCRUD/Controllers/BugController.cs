@@ -7,6 +7,8 @@ using VersionsCRUD.Models;
 
 namespace VersionsCRUD.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public class BugController : Controller
     {
         private readonly postgresContext _context;
@@ -236,6 +238,11 @@ namespace VersionsCRUD.Controllers
             return resp;
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
 
 
         //public void PrintBugStatus() // fkre aamel class jdide

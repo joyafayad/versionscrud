@@ -11,6 +11,8 @@ using VersionsCRUD.Version;
 
 namespace VersionsCRUD.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public class VersionController : Controller
     {
         private readonly postgresContext _context;
@@ -238,6 +240,12 @@ namespace VersionsCRUD.Controllers
             resp.code = 0;
             resp.message = "Success";
             return resp;
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
         }
 
     }

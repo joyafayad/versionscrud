@@ -43,11 +43,20 @@
                     <div class="formbg">
                         <div class="formbg-inner padding-horizontal--48">
                             <span class="padding-bottom--15">create your project</span>
-                            <form id="stripe-login">
-                                @* @action="@Url.Action("Add", "Project")" method="post"@ *@
+                            <form id="user-add-form">
                                 <div class="field padding-bottom--24">
-                                    <label for="name">name</label>
-                                    <input type="name" id="projectName" class="projectName" name="name">
+                                    <label for="username">Username</label>
+                                    <input type="text" id="username" name="username">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" name="password">
                                 </div>
 
                                 <div class="field field-checkbox padding-bottom--24 flex-flex align-center">
@@ -55,10 +64,12 @@
                                         <input type="checkbox" name="checkbox"> Done
                                     </label>
                                 </div>
+
                                 <div class="field padding-bottom--24">
-                                    <input type="submit" name="submit" value="submit" />  @* @onclick="addProject($('#projectName').val())"@ *@
+                                    <input type="submit" name="submit" value="Submit" />
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -67,25 +78,29 @@
     </div>
 </body>
 
+
+
 @section scripts {
     <script>
         $(document).ready(function () {
-            $('#stripe-login').submit(function (e) {
+            $('#user-add-form').submit(function (e) {
                 e.preventDefault(); // prevent default form submission
 
-                var projectData = {
-                    name: $('#projectName').val()
+                var userData = {
+                    username: $('#username').val(),
+                    email: $('#email').val(),
+                    password: $('#password').val()
                 };
 
-                addProject(projectData);
+                addUser(userData);
             });
 
-            function addProject(projectData) {
+            function addUser(userData) {
                 $.ajax({
-                    url: '/api/Project/Add',
+                    url: '/api/User/Add',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(projectData),
+                    data: JSON.stringify(userData),
                     success: function (result) {
                         console.log(result);
                         alert(result.message);
@@ -93,12 +108,12 @@
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
-                        alert('Error adding project: ' + xhr.responseText);
+                        alert('Error adding user: ' + xhr.responseText);
                     }
                 });
             }
         });
-        
 
     </script>
 }
+

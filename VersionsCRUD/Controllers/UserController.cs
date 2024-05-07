@@ -7,6 +7,8 @@ using VersionsCRUD.User;
 
 namespace VersionsCRUD.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]/[action]")]
     public class UserController : Controller
     {
         private readonly postgresContext _context;
@@ -260,6 +262,11 @@ namespace VersionsCRUD.Controllers
             return Ok(new { token = newToken });
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
         //[HttpPost]
         //public IActionResult Logout(TokenRequest request)
         //{

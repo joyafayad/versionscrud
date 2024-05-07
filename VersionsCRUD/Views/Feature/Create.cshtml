@@ -42,12 +42,21 @@
                 <div class="formbg-outer">
                     <div class="formbg">
                         <div class="formbg-inner padding-horizontal--48">
-                            <span class="padding-bottom--15">create your project</span>
-                            <form id="stripe-login">
-                                @* @action="@Url.Action("Add", "Project")" method="post"@ *@
+                            <span class="padding-bottom--15">create your feature</span>
+                            <form id="feature-login">
                                 <div class="field padding-bottom--24">
-                                    <label for="name">name</label>
-                                    <input type="name" id="projectName" class="projectName" name="name">
+                                    <label for="name">Name</label>
+                                    <input type="text" id="featureName" class="featureName" name="name">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="description">Description</label>
+                                    <input type="text" id="featureDescription" class="featureDescription" name="description">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="release">Release Date</label>
+                                    <input type="text" id="featureRelease" class="featureRelease" name="release">
                                 </div>
 
                                 <div class="field field-checkbox padding-bottom--24 flex-flex align-center">
@@ -55,10 +64,12 @@
                                         <input type="checkbox" name="checkbox"> Done
                                     </label>
                                 </div>
+
                                 <div class="field padding-bottom--24">
-                                    <input type="submit" name="submit" value="submit" />  @* @onclick="addProject($('#projectName').val())"@ *@
+                                    <input type="submit" name="submit" value="Submit" />
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -67,25 +78,29 @@
     </div>
 </body>
 
+
 @section scripts {
     <script>
         $(document).ready(function () {
-            $('#stripe-login').submit(function (e) {
+            $('#feature-login').submit(function (e) {
                 e.preventDefault(); // prevent default form submission
 
-                var projectData = {
-                    name: $('#projectName').val()
+                var featureData = {
+                    name: $('#featureName').val(),
+                    description: $('#featureDescription').val(),
+                    release: $('#featureRelease').val()
                 };
 
-                addProject(projectData);
+
+                addFeature(featureData, '/api/Feature/Add');
             });
 
-            function addProject(projectData) {
+            function addFeature(featureData, apiUrl) {
                 $.ajax({
-                    url: '/api/Project/Add',
+                    url: apiUrl,
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(projectData),
+                    data: JSON.stringify(featureData),
                     success: function (result) {
                         console.log(result);
                         alert(result.message);
@@ -93,12 +108,10 @@
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
-                        alert('Error adding project: ' + xhr.responseText);
+                        alert('Error adding feature: ' + xhr.responseText);
                     }
                 });
             }
         });
-        
-
     </script>
 }

@@ -10,12 +10,12 @@ using VersionsCRUD.Project;
 //using VersionsCRUD.Views.Project;
 
 
-
-
-
 namespace VersionsCRUD.Controllers
 {
-	[Authorize]
+    [ApiController]
+    [Route("api/[controller]/[action]")]
+
+    [Authorize]
 	public class ProjectController : Controller
 	{
 

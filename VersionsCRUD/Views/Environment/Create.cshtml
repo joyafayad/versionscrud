@@ -42,23 +42,28 @@
                 <div class="formbg-outer">
                     <div class="formbg">
                         <div class="formbg-inner padding-horizontal--48">
-                            <span class="padding-bottom--15">create your project</span>
+                            <span class="padding-bottom--15">create your environment</span>
                             <form id="stripe-login">
-                                @* @action="@Url.Action("Add", "Project")" method="post"@ *@
                                 <div class="field padding-bottom--24">
-                                    <label for="name">name</label>
-                                    <input type="name" id="projectName" class="projectName" name="name">
+                                    <label for="environmentName">Environment Name</label>
+                                    <input type="text" id="environmentName" class="environmentName" name="environmentName">
                                 </div>
 
-                                <div class="field field-checkbox padding-bottom--24 flex-flex align-center">
-                                    <label for="checkbox">
-                                        <input type="checkbox" name="checkbox"> Done
-                                    </label>
-                                </div>
                                 <div class="field padding-bottom--24">
-                                    <input type="submit" name="submit" value="submit" />  @* @onclick="addProject($('#projectName').val())"@ *@
+                                    <label for="environmentDescription">Environment Description</label>
+                                    <input type="text" id="environmentDescription" class="environmentDescription" name="environmentDescription">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="projectId">Project ID</label>
+                                    <input type="text" id="projectId" class="projectId" name="projectId">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <input type="submit" name="submit" value="submit" />
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -72,20 +77,22 @@
         $(document).ready(function () {
             $('#stripe-login').submit(function (e) {
                 e.preventDefault(); // prevent default form submission
-
-                var projectData = {
-                    name: $('#projectName').val()
+                console.log("here");
+                var environmentData = {
+                    name: $('#environmentName').val(),
+                    description: $('#environmentDescription').val(),
+                    projectId: $('#projectId').val()
                 };
 
-                addProject(projectData);
+                addEnvironment(environmentData);
             });
 
-            function addProject(projectData) {
+            function addEnvironment(environmentData) {
                 $.ajax({
-                    url: '/api/Project/Add',
+                    url: '/api/Environment/Add',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify(projectData),
+                    data: JSON.stringify(environmentData),
                     success: function (result) {
                         console.log(result);
                         alert(result.message);
@@ -93,12 +100,10 @@
                     },
                     error: function (xhr, status, error) {
                         console.error(xhr.responseText);
-                        alert('Error adding project: ' + xhr.responseText);
+                        alert('Error adding environment: ' + xhr.responseText);
                     }
                 });
             }
         });
-        
-
     </script>
 }
