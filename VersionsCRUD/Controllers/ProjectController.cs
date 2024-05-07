@@ -222,10 +222,11 @@ namespace VersionsCRUD.Controllers
 
 			_context.Projects.Remove(project);
 
-			//var environments = _context.Environments.Where();
-			//_context.Environments.Remove(enviroments);
+            _context.Projects.Remove(project);
 
-			await _context.SaveChangesAsync();
+            var environments = _context.Environments.Where(e => e.Projectid == project.Id).ToList();
+            _context.Environments.RemoveRange(environments);
+            await _context.SaveChangesAsync();
 
 			resp.code = 0;
 			resp.message = "Success";

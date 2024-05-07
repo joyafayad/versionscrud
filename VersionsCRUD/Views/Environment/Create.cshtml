@@ -55,9 +55,13 @@
                                 </div>
 
                                 <div class="field padding-bottom--24">
-                                    <label for="projectId">Project ID</label>
-                                    <input type="text" id="projectId" class="projectId" name="projectId">
-                                </div>
+@*                                    <label for="projectId">Project ID</label>
+                                    <input type="text" id="projectId" class="projectId" name="projectId"> <!-- dropdown here from loaddata -->
+*@
+    <label for="projectId">Project ID</label>
+    <select id="projectId" class="projectId" name="projectId"></select>
+
+</div>
 
                                 <div class="field padding-bottom--24">
                                     <input type="submit" name="submit" value="submit" />
@@ -75,6 +79,23 @@
 @section scripts {
     <script>
         $(document).ready(function () {
+
+            // Load data into the project dropdown
+            $.ajax({
+                url: '/api/Environment/LoadData',
+                type: 'GET',
+                success: function(result) {
+                    result.projects.forEach(function(project) {
+                        // $('#projectId').append('<option value="${project.id}">${project.name}</option>');
+                        $('#projectId').append(` <option value="${project.id}">${project.name}</option>`);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Error loading projects: ' + xhr.responseText);
+                }
+            });
+
             $('#stripe-login').submit(function (e) {
                 e.preventDefault(); // prevent default form submission
                 console.log("here");

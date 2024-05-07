@@ -238,7 +238,7 @@ namespace VersionsCRUD.Controllers
             return resp;
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<ActionResult<EnvironmentLoadDataResp>> LoadData()
         {
             EnvironmentLoadDataResp resp = new();

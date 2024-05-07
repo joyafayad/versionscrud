@@ -47,7 +47,7 @@
                                 <div class="field padding-bottom--24">
                                     <label for="projectId">Project Id</label>
                                     <input type="text" id="projectId" name="projectId">
-                                    <!-- You might want to replace type="text" with appropriate input type -->
+                                    
                                 </div>
 
                                 <div class="field padding-bottom--24">
@@ -71,7 +71,23 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            $('#version-add-form').submit(function (e) {
+
+            // Load data into the project dropdown
+            $.ajax({
+                url: '/api/Version/LoadData',
+                type: 'GET',
+                success: function (result) {
+                    result.projects.forEach(function (project) {
+                        $('#projectId').append(<option value="${project.id}" > ${ project.name } < /option>);
+                                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Error loading projects: ' + xhr.responseText);
+                }
+            });
+
+            $('#stripe-login').submit(function (e) {
                 e.preventDefault(); // prevent default form submission
 
                 var versionData = {
