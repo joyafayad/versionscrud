@@ -220,7 +220,7 @@ namespace VersionsCRUD.Controllers
             return resp;
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<ActionResult<VersionLoadDataResp>> LoadData()
         {
             VersionLoadDataResp resp = new();
