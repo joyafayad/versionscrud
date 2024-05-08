@@ -212,7 +212,8 @@ namespace VersionsCRUD.Controllers
                 id = version.Id,
                 projectId = version.Projectid,
                 versionNumber = version.Versionnumber,
-                //here
+                //featureId = version.featureId,
+                
             };
 
             resp.code = 0;
@@ -261,20 +262,25 @@ namespace VersionsCRUD.Controllers
 
             if (res.Value.code == 0)
             {
-                ViewBag.VersionId = res.Value.version.id;
-                ViewBag.ProjectId = res.Value.version.id;
-                ViewBag.BugId = res.Value.version.id;
-                ViewBag.FeatureId = res.Value.version.id;
-                ViewBag.isMinor = res.Value.version.id;
-                ViewBag.isMajor = res.Value.version.id;
-                ViewBag.isPatch = res.Value.version.id;
-                ViewBag.link = res.Value.version.id;
+                ViewBag.VersionId = res.Value.version.id.Value.ToString();
+                ViewBag.ProjectId = res.Value.version.projectId;
+                ViewBag.BugId = res.Value.version.bugId;
+                ViewBag.FeatureId = res.Value.version.featureId;
+                ViewBag.isMinor = res.Value.version.isMinor;
+                ViewBag.isMajor = res.Value.version.isMajor;
+                ViewBag.isPatch = res.Value.version.isPatch;
+                ViewBag.link = res.Value.version.link;
             }
             else
             {
+                ViewBag.VersionId = "";
                 ViewBag.ProjectId = "";
                 ViewBag.BugId = "";
                 ViewBag.FeatureId = "";
+                ViewBag.isMinor = "";
+                ViewBag.isMajor = "";
+                ViewBag.isPatch = "";
+                ViewBag.link = "";
             }
 
             return View();
