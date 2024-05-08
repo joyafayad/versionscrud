@@ -24,12 +24,16 @@ namespace VersionsCRUD.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var versionsDb = await _context.Versions.ToListAsync();
+            var versionsDb = await _context.Versions
+                .Include(e => e.Project) //Projects
+                .ToListAsync();
 
             // Configure AutoMapper
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<VersionsCRUD.Models.Version, VersionGet>();
+                cfg.CreateMap<VersionsCRUD.Models.Version, VersionGet>()
+                .ForMember(dest => dest.projectName, opt => opt.MapFrom(src => src.Project.Name)); // Map project name
+                
             });
             var mapper = config.CreateMapper();
 
@@ -75,6 +79,13 @@ namespace VersionsCRUD.Controllers
             version.Id = Guid.NewGuid(); // Generate a new GUID for the project
             version.Projectid = req.projectId;
             version.Versionnumber = req.versionNumber;
+            version.FeatureId = req.featureId;
+            version.EnvironmentId = req.environmentId;
+            version.BugId = req.bugId;
+            version.IsMajor = req.isMajor;
+            version.IsMinor = req.isMinor;
+            version.IsPatch = req.isPatch;
+            version.Link = req.link;
 
             _context.Versions.Add(version);
             await _context.SaveChangesAsync();
@@ -212,7 +223,12 @@ namespace VersionsCRUD.Controllers
                 id = version.Id,
                 projectId = version.Projectid,
                 versionNumber = version.Versionnumber,
-                //featureId = version.featureId,
+                bugId = version.BugId,
+                featureId = version.FeatureId,
+                isMajor = version.IsMajor,
+                isMinor = version.IsMinor,
+                isPatch = version.IsPatch,
+                link = version.Link
                 
             };
 

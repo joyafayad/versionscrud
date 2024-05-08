@@ -23,7 +23,7 @@
         public bool? IsPatch { get; set; }
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }
-        //public Guid? EnvironmentId { get; set; }
+        public Guid? EnvironmentId { get; set; }
 
         //public virtual Environment? Environment { get; set; }
         public virtual Project? Project { get; set; }
