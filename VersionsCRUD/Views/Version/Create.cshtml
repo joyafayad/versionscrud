@@ -42,17 +42,37 @@
                 <div class="formbg-outer">
                     <div class="formbg">
                         <div class="formbg-inner padding-horizontal--48">
-                            <span class="padding-bottom--15">create your project</span>
-                            <form id="version-add-form">
+                            <span class="padding-bottom--15">create your version</span>
+                            <form id="stripe-login">
                                 <div class="field padding-bottom--24">
-                                    <label for="projectId">Project ID</label>
+                                    <label for="projectId">Project </label>
                                     <select id="projectId" class="projectId" name="projectId"></select>
                                     
                                 </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="bugId">Bug </label>
+                                    <select id="bugId" class="bugId" name="bugId"></select>
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="featureId">Feature </label>
+                                    <select id="featureId" class="featureId" name="featureId"></select>
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="environmentId">Environment</label>
+                                    <select id="environmentId" class="environmentId" name="environmentId"></select>
+                                </div>
+
 
                                 <div class="field padding-bottom--24">
                                     <label for="versionNumber">Version Number</label>
                                     <input type="text" id="versionNumber" name="versionNumber">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="link">Link</label>
+                                    <input type="text" id="link" name="link">
                                 </div>
 
                                 <div class="field padding-bottom--24">
@@ -87,6 +107,10 @@
                             $('#featureId').append(`<option value="${feature.id}">${feature.name}</option>`);
                         });
 
+                    result.features.forEach(function (environment) {
+                        $('#environmentId').append(`<option value="${environment.id}">${environment.name}</option>`);
+                    });
+
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -100,12 +124,14 @@
                 var versionData = {
                     projectId: $('#projectId').val(),
                     bugId: $('#bugId').val(),
+                    environmentId: $('#environmentId').val(),
                     featureId: $('#featureId').val(),
                     versionNumber: $('#versionNumber').val(),
                     isMajor: $('#isMajor').prop('checked'),
                     isMinor: $('#isMinor').prop('checked'),
                     isPatch: $('#isPatch').prop('checked'),
                     link: $('#link').val()
+                             
                 };
 
                 addVersion(versionData);

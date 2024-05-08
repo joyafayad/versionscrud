@@ -12,10 +12,10 @@ using VersionsCRUD.Project;
 
 namespace VersionsCRUD.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]/[action]")]
+	[ApiController]
+	[Route("api/[controller]/[action]")]
 
-    [Authorize]
+	[Authorize]
 	public class ProjectController : Controller
 	{
 
@@ -53,159 +53,159 @@ namespace VersionsCRUD.Controllers
 		}
 
 
-        /// <summary>
-        /// add a new project
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<ProjectAddResp>> Add(ProjectAddReq req)
-        {
-            ProjectAddResp resp = new();
+		/// <summary>
+		/// add a new project
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<ProjectAddResp>> Add(ProjectAddReq req)
+		{
+			ProjectAddResp resp = new();
 
-            if (req == null)
-            {
-                //Handled request null
-                resp.code = 1;
-                resp.message = "Something went wrong. Please try again later ! ";
-                return resp;
-            }
+			if (req == null)
+			{
+				//Handled request null
+				resp.code = 1;
+				resp.message = "Something went wrong. Please try again later ! ";
+				return resp;
+			}
 
-            //To Handle project already added same name
+			//To Handle project already added same name
 
-            var project = new VersionsCRUD.Models.Project();
-            project.Id = Guid.NewGuid(); // Generate a new GUID for the project
-            project.Name = req.name;
+			var project = new VersionsCRUD.Models.Project();
+			project.Id = Guid.NewGuid(); // Generate a new GUID for the project
+			project.Name = req.name;
 
-            _context.Projects.Add(project);
-            await _context.SaveChangesAsync();
+			_context.Projects.Add(project);
+			await _context.SaveChangesAsync();
 
-            resp.id = project.Id;
-            resp.code = 0;
-            resp.message = "Success";
-            return resp;
-        }
+			resp.id = project.Id;
+			resp.code = 0;
+			resp.message = "Success";
+			return resp;
+		}
 
-        /// <summary>
-        /// get a list of project
-        /// </summary>
-        /// <param name="req"></param>
-        ///  <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ProjectGetResp> Get(ProjectGetReq req)
-        {
-            ProjectGetResp resp = new();
+		/// <summary>
+		/// get a list of project
+		/// </summary>
+		/// <param name="req"></param>
+		///  <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ProjectGetResp> Get(ProjectGetReq req)
+		{
+			ProjectGetResp resp = new();
 
-            List<VersionsCRUD.Models.Project> projectsDb = await _context.Projects
+			List<VersionsCRUD.Models.Project> projectsDb = await _context.Projects
 
-          .Skip((req.pagenumber - 1) * req.pagesize)
-           .Take(req.pagesize)
-           .ToListAsync();
+		  .Skip((req.pagenumber - 1) * req.pagesize)
+		   .Take(req.pagesize)
+		   .ToListAsync();
 
-            // Configure AutoMapper
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MappingProject>();
-            });
-            var mapper = config.CreateMapper();
+			// Configure AutoMapper
+			var config = new MapperConfiguration(cfg =>
+			{
+				cfg.AddProfile<MappingProject>();
+			});
+			var mapper = config.CreateMapper();
 
-            // Map the projects to DTOs
-            resp.projects = mapper.Map<List<VersionsCRUD.Models.Project>, List<ProjectGet>>(projectsDb);
-            resp.totalCount = resp.projects.Count;
+			// Map the projects to DTOs
+			resp.projects = mapper.Map<List<VersionsCRUD.Models.Project>, List<ProjectGet>>(projectsDb);
+			resp.totalCount = resp.projects.Count;
 
 
-            resp.code = 0;
-            resp.message = "Success";
-            return resp;
+			resp.code = 0;
+			resp.message = "Success";
+			return resp;
 
-        }
+		}
 
-        /// <summary>
-        /// update a project
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<ProjectUpdateResp>> Update(ProjectUpdateReq req)
-        {
-            ProjectUpdateResp resp = new();
-            var project = await _context.Projects.FindAsync(req.id);
+		/// <summary>
+		/// update a project
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<ProjectUpdateResp>> Update(ProjectUpdateReq req)
+		{
+			ProjectUpdateResp resp = new();
+			var project = await _context.Projects.FindAsync(req.id);
 
-            if (project == null)
-            {
-                //Handled project not found
-                resp.code = 10;
-                resp.message = "Project Not Found";
-                return resp;
-            }
+			if (project == null)
+			{
+				//Handled project not found
+				resp.code = 10;
+				resp.message = "Project Not Found";
+				return resp;
+			}
 
-            project.Id = req.id;
-            project.Name = req.name;
+			project.Id = req.id;
+			project.Name = req.name;
 
-            _context.Projects.Update(project);
-            await _context.SaveChangesAsync();
+			_context.Projects.Update(project);
+			await _context.SaveChangesAsync();
 
-            resp.code = 0;
-            resp.message = "Success";
-            return resp;
-        }
+			resp.code = 0;
+			resp.message = "Success";
+			return resp;
+		}
 
-        /// <summary>
-        /// getbyid a project
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<ProjectGetByIdResp>> GetById(ProjectGetByIdReq req)
-        {
-            ProjectGetByIdResp resp = new();
-            VersionsCRUD.Models.Project project = await _context.Projects.FindAsync(req.id);
+		/// <summary>
+		/// getbyid a project
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<ProjectGetByIdResp>> GetById(ProjectGetByIdReq req)
+		{
+			ProjectGetByIdResp resp = new();
+			VersionsCRUD.Models.Project project = await _context.Projects.FindAsync(req.id);
 
-            if (project == null)
-            {
-                //Handled project not found
-                resp.code = 10;
-                resp.message = "Project Not Found";
-                return resp;
-            }
+			if (project == null)
+			{
+				//Handled project not found
+				resp.code = 10;
+				resp.message = "Project Not Found";
+				return resp;
+			}
 
-            resp.project = new ProjectGet
-            {
-                id = project.Id,
-                name = project.Name,
-            };
+			resp.project = new ProjectGet
+			{
+				id = project.Id,
+				name = project.Name,
+			};
 
-            resp.code = 0;
-            resp.message = "Success";
+			resp.code = 0;
+			resp.message = "Success";
 
-            return resp;
-        }
-        /// <summary>
-        /// delete a project
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
+			return resp;
+		}
+		/// <summary>
+		/// delete a project
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
 		public async Task<ActionResult<ProjectDeleteResp>> Delete(ProjectDeleteReq req)
 		{
 			ProjectDeleteResp resp = new();
@@ -222,27 +222,38 @@ namespace VersionsCRUD.Controllers
 
 			_context.Projects.Remove(project);
 
-            _context.Projects.Remove(project);
+			_context.Projects.Remove(project);
 
-            var environments = _context.Environments.Where(e => e.Projectid == project.Id).ToList();
-            _context.Environments.RemoveRange(environments);
-            await _context.SaveChangesAsync();
+			var environments = _context.Environments.Where(e => e.Projectid == project.Id).ToList();
+			_context.Environments.RemoveRange(environments);
+			await _context.SaveChangesAsync();
 
 			resp.code = 0;
 			resp.message = "Success";
 			return resp;
 		}
 
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-    }
-    //ViewData["username"] = User.FindFirstValue("test");
-    //return View();
+		[HttpGet]
+		public IActionResult Create()
+		{
+			return View();
+		}
 
-   
+		[HttpGet]
+		public async Task<IActionResult> Edit(Guid id)
+		{
+			ProjectGetByIdReq resp = new ProjectGetByIdReq();
+			resp.id = id;
+			var res = await GetById(resp);
+
+			//return resp;
+			return View("Create");
+		}
+	}
+	//ViewData["username"] = User.FindFirstValue("test");
+	//return View();
+
+
 
 }
 

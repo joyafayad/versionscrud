@@ -24,7 +24,7 @@
 			
 		</tr>
 	</thead>
-	<tbody id="table-body">
+	<tbo2dy id="table-body">
 		@{
 			var tableData = Model.projects;
 			 //ViewData["TableData"] as string[][];
@@ -41,16 +41,17 @@
 						</svg>
 					</button>
 
-					<button>
-						<a href="/Project/Edit" />
+					<a href="/api/Project/Edit?id=@project.id">
+					<button>	
 						<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 							<path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-2-9-9-2-9 2 2 9 9 2zm0 0v-8m-4 4h8" />
 						</svg>
 					</button>
+					</a>
 				</td>
 			</tr>
 			}
-	</tbody>
+	</tbo2dy>
 		
 	@* <tr>
 		<button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;">

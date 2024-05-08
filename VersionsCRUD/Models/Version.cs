@@ -23,9 +23,9 @@
         public bool? IsPatch { get; set; }
         public Guid? Createdby { get; set; }
         public Guid? Updatedby { get; set; }
-        public Guid? EnvironemntId { get; set; }
+        //public Guid? EnvironmentId { get; set; }
 
-        public virtual Environment? Environment { get; set; }
+        //public virtual Environment? Environment { get; set; }
         public virtual Project? Project { get; set; }
         public virtual ICollection<Document> Documents { get; set; }
         public virtual ICollection<Release> Releases { get; set; }
