@@ -45,6 +45,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Controllers\EF\" />
+	  <Folder Include="Models\" />
 	</ItemGroup>
 
 </Project>

@@ -16,8 +16,11 @@ namespace VersionsCRUD.Version
         public string? projectName { get; set; }
         public string? versionNumber { get; set; }
         public Guid? featureId { get; set; }
+        public string? featureName { get; set; }
         public Guid? bugId { get; set; }
+        public string? bugName { get; set; }
         public Guid? environmentId { get; set; }
+        public string? environmentName { get; set; }
         public Boolean? isMajor { get; set; }
         public Boolean? isMinor { get; set; }
         public Boolean? isPatch { get; set; }

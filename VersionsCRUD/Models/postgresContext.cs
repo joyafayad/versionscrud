@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace VersionsCRUD.Models
 {
@@ -674,6 +677,8 @@ namespace VersionsCRUD.Models
 
                 entity.Property(e => e.Createdby).HasColumnName("createdby");
 
+                entity.Property(e => e.EnvironmentId).HasColumnName("environment_id");
+
                 entity.Property(e => e.FeatureId).HasColumnName("feature_id");
 
                 entity.Property(e => e.IsMajor)
@@ -712,6 +717,21 @@ namespace VersionsCRUD.Models
                 entity.Property(e => e.Versionnumber)
                     .HasMaxLength(255)
                     .HasColumnName("versionnumber");
+
+                entity.HasOne(d => d.Bug)
+                    .WithMany(p => p.Versions)
+                    .HasForeignKey(d => d.BugId)
+                    .HasConstraintName("versions_bug_fk");
+
+                entity.HasOne(d => d.Environment)
+                    .WithMany(p => p.Versions)
+                    .HasForeignKey(d => d.EnvironmentId)
+                    .HasConstraintName("versions_environment_fk");
+
+                entity.HasOne(d => d.Feature)
+                    .WithMany(p => p.Versions)
+                    .HasForeignKey(d => d.FeatureId)
+                    .HasConstraintName("versions_feature_fk");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.Versions)

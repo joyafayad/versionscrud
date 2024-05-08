@@ -1,4 +1,7 @@
-﻿namespace VersionsCRUD.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace VersionsCRUD.Models
 {
     public partial class Release
     {

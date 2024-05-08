@@ -26,14 +26,20 @@ namespace VersionsCRUD.Controllers
         {
             var versionsDb = await _context.Versions
                 .Include(e => e.Project) //Projects
+                .Include(e => e.Environment) //Environments
+                .Include(e => e.Feature) //Features
+                .Include(e => e.Bug) //Bugs
                 .ToListAsync();
 
             // Configure AutoMapper
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<VersionsCRUD.Models.Version, VersionGet>()
-                .ForMember(dest => dest.projectName, opt => opt.MapFrom(src => src.Project.Name)); // Map project name
-                
+                .ForMember(dest => dest.projectName, opt => opt.MapFrom(src => src.Project.Name)) // Map project name
+                .ForMember(dest => dest.environmentName, opt => opt.MapFrom(src => src.Environment.Name)) // Map environment name
+                .ForMember(dest => dest.featureName, opt => opt.MapFrom(src => src.Feature.Name)) // Map feature name
+                .ForMember(dest => dest.bugName, opt => opt.MapFrom(src => src.Bug.Description)) // Map bug name
+                ;
             });
             var mapper = config.CreateMapper();
 
@@ -222,6 +228,7 @@ namespace VersionsCRUD.Controllers
             {
                 id = version.Id,
                 projectId = version.Projectid,
+                environmentId = version.EnvironmentId,
                 versionNumber = version.Versionnumber,
                 bugId = version.BugId,
                 featureId = version.FeatureId,
@@ -280,6 +287,7 @@ namespace VersionsCRUD.Controllers
             {
                 ViewBag.VersionId = res.Value.version.id.Value.ToString();
                 ViewBag.ProjectId = res.Value.version.projectId;
+                ViewBag.EnvironmentId = res.Value.version.environmentId;
                 ViewBag.BugId = res.Value.version.bugId;
                 ViewBag.FeatureId = res.Value.version.featureId;
                 ViewBag.isMinor = res.Value.version.isMinor;
@@ -291,6 +299,7 @@ namespace VersionsCRUD.Controllers
             {
                 ViewBag.VersionId = "";
                 ViewBag.ProjectId = "";
+                ViewBag.EnvironmentId = "";
                 ViewBag.BugId = "";
                 ViewBag.FeatureId = "";
                 ViewBag.isMinor = "";

@@ -1,7 +1,15 @@
-﻿namespace VersionsCRUD.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace VersionsCRUD.Models
 {
     public partial class Bug
     {
+        public Bug()
+        {
+            Versions = new HashSet<Version>();
+        }
+
         public Guid Id { get; set; }
         public string? Description { get; set; }
         public DateOnly? Reported { get; set; }
@@ -16,5 +24,6 @@
         public Guid? Projectsid { get; set; }
 
         public virtual Project? Projects { get; set; }
+        public virtual ICollection<Version> Versions { get; set; }
     }
 }
