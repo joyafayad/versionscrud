@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VersionsCRUD.Environment;
+using VersionsCRUD.Feature;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 using VersionsCRUD.Project;
@@ -255,6 +256,31 @@ namespace VersionsCRUD.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            EnvironmentGetByIdReq resp = new EnvironmentGetByIdReq();
+            resp.id = id;
+
+            var res = await GetById(resp);
+            ViewBag.action = "edit";
+
+
+            if (res.Value.code == 0)
+            {
+                ViewBag.EnvvironmentName = res.Value.environment.name;
+                ViewBag.EnvironmentDescription = res.Value.environment.description;
+                ViewBag.ProjectId = res.Value.environment.id.Value.ToString();
+            }
+            else
+            {
+                ViewBag.EnvvironmentName = "";
+                ViewBag.EnvironmentDescription = "";
+                ViewBag.ProjectId = "";
+            }
+
             return View();
         }
 

@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 using VersionsCRUD.Project;
@@ -12,250 +13,267 @@ using VersionsCRUD.Project;
 
 namespace VersionsCRUD.Controllers
 {
-	[ApiController]
-	[Route("api/[controller]/[action]")]
+    [ApiController]
+    [Route("api/[controller]/[action]")]
 
-	[Authorize]
-	public class ProjectController : Controller
-	{
+    [Authorize]
+    public class ProjectController : Controller
+    {
 
-		private readonly postgresContext _context;
-
-
-		public ProjectController(postgresContext context)
-		{
-			_context = context;
-		}
-
-		public async Task<IActionResult> Index()
-		{
-
-			var projectsDb = await _context.Projects.ToListAsync();
-
-			// Configure AutoMapper
-			var config = new MapperConfiguration(cfg =>
-			{
-				cfg.CreateMap<VersionsCRUD.Models.Project, ProjectGet>();
-			});
-			var mapper = config.CreateMapper();
-
-			// Map the projects to DTOs
-			var projectsDto = mapper.Map<List<ProjectGet>>(projectsDb);
-
-			// Create the response object
-			var resp = new ProjectGetResp
-			{
-				projects = projectsDto,
-				totalCount = projectsDto.Count
-			};
-
-			return View(resp);
-		}
+        private readonly postgresContext _context;
 
 
-		/// <summary>
-		/// add a new project
-		/// </summary>
-		/// <param name="req"></param>
-		/// <remarks>
-		/// codes : 0 - Success / 6- Invalid reported date format <br/>
-		/// reported date format : yyyy-MM-dd
-		/// </remarks>
-		/// <returns></returns>
-		[HttpPost]
-		public async Task<ActionResult<ProjectAddResp>> Add(ProjectAddReq req)
-		{
-			ProjectAddResp resp = new();
+        public ProjectController(postgresContext context)
+        {
+            _context = context;
+        }
 
-			if (req == null)
-			{
-				//Handled request null
-				resp.code = 1;
-				resp.message = "Something went wrong. Please try again later ! ";
-				return resp;
+        public async Task<IActionResult> Index()
+        {
+
+            var projectsDb = await _context.Projects.ToListAsync();
+
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<VersionsCRUD.Models.Project, ProjectGet>();
+            });
+            var mapper = config.CreateMapper();
+
+            // Map the projects to DTOs
+            var projectsDto = mapper.Map<List<ProjectGet>>(projectsDb);
+
+            // Create the response object
+            var resp = new ProjectGetResp
+            {
+                projects = projectsDto,
+                totalCount = projectsDto.Count
+            };
+
+            return View(resp);
+        }
+
+
+        /// <summary>
+        /// add a new project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ProjectAddResp>> Add(ProjectAddReq req)
+        {
+            ProjectAddResp resp = new();
+
+            if (req == null)
+            {
+                //Handled request null
+                resp.code = 1;
+                resp.message = "Something went wrong. Please try again later ! ";
+                return resp;
+            }
+
+            //To Handle project already added same name
+
+            var project = new VersionsCRUD.Models.Project();
+            project.Id = Guid.NewGuid(); // Generate a new GUID for the project
+            project.Name = req.name;
+
+            _context.Projects.Add(project);
+            await _context.SaveChangesAsync();
+
+            resp.id = project.Id;
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
+
+        /// <summary>
+        /// get a list of project
+        /// </summary>
+        /// <param name="req"></param>
+        ///  <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ProjectGetResp> Get(ProjectGetReq req)
+        {
+            ProjectGetResp resp = new();
+
+            List<VersionsCRUD.Models.Project> projectsDb = await _context.Projects
+
+          .Skip((req.pagenumber - 1) * req.pagesize)
+           .Take(req.pagesize)
+           .ToListAsync();
+
+            // Configure AutoMapper
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingProject>();
+            });
+            var mapper = config.CreateMapper();
+
+            // Map the projects to DTOs
+            resp.projects = mapper.Map<List<VersionsCRUD.Models.Project>, List<ProjectGet>>(projectsDb);
+            resp.totalCount = resp.projects.Count;
+
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+
+        }
+
+        /// <summary>
+        /// update a project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ProjectUpdateResp>> Update(ProjectUpdateReq req)
+        {
+            ProjectUpdateResp resp = new();
+            var project = await _context.Projects.FindAsync(req.id);
+
+            if (project == null)
+            {
+                //Handled project not found
+                resp.code = 10;
+                resp.message = "Project Not Found";
+                return resp;
+            }
+
+            project.Id = req.id;
+            project.Name = req.name;
+
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
+
+        /// <summary>
+        /// getbyid a project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ProjectGetByIdResp>> GetById(ProjectGetByIdReq req)
+        {
+            ProjectGetByIdResp resp = new();
+            VersionsCRUD.Models.Project project = await _context.Projects.FindAsync(req.id);
+
+            if (project == null)
+            {
+                //Handled project not found
+                resp.code = 10;
+                resp.message = "Project Not Found";
+                return resp;
+            }
+
+            resp.project = new ProjectGet
+            {
+                id = project.Id,
+                name = project.Name,
+            };
+
+            resp.code = 0;
+            resp.message = "Success";
+
+            return resp;
+        }
+        /// <summary>
+        /// delete a project
+        /// </summary>
+        /// <param name="req"></param>
+        /// <remarks>
+        /// codes : 0 - Success / 6- Invalid reported date format <br/>
+        /// reported date format : yyyy-MM-dd
+        /// </remarks>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<ActionResult<ProjectDeleteResp>> Delete(ProjectDeleteReq req)
+        {
+            ProjectDeleteResp resp = new();
+
+            var project = await _context.Projects.FindAsync(req.id);
+
+            if (project == null)
+            {
+                //Handled project not found
+                resp.code = 10;
+                resp.message = "Project Not Found";
+                return resp;
+            }
+
+            _context.Projects.Remove(project);
+
+            _context.Projects.Remove(project);
+
+            var environments = _context.Environments.Where(e => e.Projectid == project.Id).ToList();
+            _context.Environments.RemoveRange(environments);
+            await _context.SaveChangesAsync();
+
+            resp.code = 0;
+            resp.message = "Success";
+            return resp;
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.action = "create";
+
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            ProjectGetByIdReq resp = new ProjectGetByIdReq();
+            resp.id = id;
+
+            var res = await GetById(resp);
+            ViewBag.action = "edit";
+
+
+            if (res.Value.code == 0) {
+                ViewBag.ProjectName = res.Value.project.name;
+                ViewBag.ProjectId = res.Value.project.id.Value.ToString();
+            }
+            else
+            {
+                ViewBag.ProjectName = "";
+				ViewBag.ProjectId = "";
 			}
 
-			//To Handle project already added same name
-
-			var project = new VersionsCRUD.Models.Project();
-			project.Id = Guid.NewGuid(); // Generate a new GUID for the project
-			project.Name = req.name;
-
-			_context.Projects.Add(project);
-			await _context.SaveChangesAsync();
-
-			resp.id = project.Id;
-			resp.code = 0;
-			resp.message = "Success";
-			return resp;
-		}
-
-		/// <summary>
-		/// get a list of project
-		/// </summary>
-		/// <param name="req"></param>
-		///  <remarks>
-		/// codes : 0 - Success / 6- Invalid reported date format <br/>
-		/// reported date format : yyyy-MM-dd
-		/// </remarks>
-		/// <returns></returns>
-		[HttpPost]
-		public async Task<ProjectGetResp> Get(ProjectGetReq req)
-		{
-			ProjectGetResp resp = new();
-
-			List<VersionsCRUD.Models.Project> projectsDb = await _context.Projects
-
-		  .Skip((req.pagenumber - 1) * req.pagesize)
-		   .Take(req.pagesize)
-		   .ToListAsync();
-
-			// Configure AutoMapper
-			var config = new MapperConfiguration(cfg =>
-			{
-				cfg.AddProfile<MappingProject>();
-			});
-			var mapper = config.CreateMapper();
-
-			// Map the projects to DTOs
-			resp.projects = mapper.Map<List<VersionsCRUD.Models.Project>, List<ProjectGet>>(projectsDb);
-			resp.totalCount = resp.projects.Count;
-
-
-			resp.code = 0;
-			resp.message = "Success";
-			return resp;
-
-		}
-
-		/// <summary>
-		/// update a project
-		/// </summary>
-		/// <param name="req"></param>
-		/// <remarks>
-		/// codes : 0 - Success / 6- Invalid reported date format <br/>
-		/// reported date format : yyyy-MM-dd
-		/// </remarks>
-		/// <returns></returns>
-		[HttpPost]
-		public async Task<ActionResult<ProjectUpdateResp>> Update(ProjectUpdateReq req)
-		{
-			ProjectUpdateResp resp = new();
-			var project = await _context.Projects.FindAsync(req.id);
-
-			if (project == null)
-			{
-				//Handled project not found
-				resp.code = 10;
-				resp.message = "Project Not Found";
-				return resp;
-			}
-
-			project.Id = req.id;
-			project.Name = req.name;
-
-			_context.Projects.Update(project);
-			await _context.SaveChangesAsync();
-
-			resp.code = 0;
-			resp.message = "Success";
-			return resp;
-		}
-
-		/// <summary>
-		/// getbyid a project
-		/// </summary>
-		/// <param name="req"></param>
-		/// <remarks>
-		/// codes : 0 - Success / 6- Invalid reported date format <br/>
-		/// reported date format : yyyy-MM-dd
-		/// </remarks>
-		/// <returns></returns>
-		[HttpPost]
-		public async Task<ActionResult<ProjectGetByIdResp>> GetById(ProjectGetByIdReq req)
-		{
-			ProjectGetByIdResp resp = new();
-			VersionsCRUD.Models.Project project = await _context.Projects.FindAsync(req.id);
-
-			if (project == null)
-			{
-				//Handled project not found
-				resp.code = 10;
-				resp.message = "Project Not Found";
-				return resp;
-			}
-
-			resp.project = new ProjectGet
-			{
-				id = project.Id,
-				name = project.Name,
-			};
-
-			resp.code = 0;
-			resp.message = "Success";
-
-			return resp;
-		}
-		/// <summary>
-		/// delete a project
-		/// </summary>
-		/// <param name="req"></param>
-		/// <remarks>
-		/// codes : 0 - Success / 6- Invalid reported date format <br/>
-		/// reported date format : yyyy-MM-dd
-		/// </remarks>
-		/// <returns></returns>
-		[HttpPost]
-		public async Task<ActionResult<ProjectDeleteResp>> Delete(ProjectDeleteReq req)
-		{
-			ProjectDeleteResp resp = new();
-
-			var project = await _context.Projects.FindAsync(req.id);
-
-			if (project == null)
-			{
-				//Handled project not found
-				resp.code = 10;
-				resp.message = "Project Not Found";
-				return resp;
-			}
-
-			_context.Projects.Remove(project);
-
-			_context.Projects.Remove(project);
-
-			var environments = _context.Environments.Where(e => e.Projectid == project.Id).ToList();
-			_context.Environments.RemoveRange(environments);
-			await _context.SaveChangesAsync();
-
-			resp.code = 0;
-			resp.message = "Success";
-			return resp;
-		}
-
-		[HttpGet]
-		public IActionResult Create()
-		{
-			return View();
-		}
-
-		[HttpGet]
-		public async Task<IActionResult> Edit(Guid id)
-		{
-			ProjectGetByIdReq resp = new ProjectGetByIdReq();
-			resp.id = id;
-			var res = await GetById(resp);
-
-			//return resp;
-			return View("Create");
-		}
-	}
-	//ViewData["username"] = User.FindFirstValue("test");
-	//return View();
-
+            return View();
+        }
+    }
 
 
 }
+//ViewData["username"] = User.FindFirstValue("test");
+//return View();
+
+
+
+
 
 
 

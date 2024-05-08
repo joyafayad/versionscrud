@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using VersionsCRUD.Bug;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
+using VersionsCRUD.Project;
 
 namespace VersionsCRUD.Controllers
 {
@@ -244,28 +245,53 @@ namespace VersionsCRUD.Controllers
             return View();
         }
 
+		[HttpGet]
+		public async Task<IActionResult> Edit(Guid id)
+		{
+			BugGetByIdReq resp = new BugGetByIdReq();
+			resp.id = id;
 
-        //public void PrintBugStatus() // fkre aamel class jdide
-        //{
-        //    var globalData = new Globaldata();
+			var res = await GetById(resp);
+			ViewBag.action = "edit";
+
+
+			if (res.Value.code == 0)
+			{
+				ViewBag.BugDescription = res.Value.bug.description;
+				ViewBag.BugStatus = res.Value.bug.status;
+				ViewBag.BugReported = res.Value.bug.reported;
+			}
+			else
+			{
+				ViewBag.BugDescription= "";
+				ViewBag.BugStatus = "";
+				ViewBag.BugReported = "";
+			}
+
+			return View();
+		}
+
+		//public void PrintBugStatus() // fkre aamel class jdide
+		//{
+		//    var globalData = new Globaldata();
 
 
 
-        //    var bugStatusEnglish = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 1);
-        //    Console.WriteLine("Bug Status in English:");
-        //    foreach (var data in bugStatusEnglish)
-        //    {
-        //        //Console.WriteLine($"{data.name}: {data.Value}");
-        //    }
+		//    var bugStatusEnglish = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 1);
+		//    Console.WriteLine("Bug Status in English:");
+		//    foreach (var data in bugStatusEnglish)
+		//    {
+		//        //Console.WriteLine($"{data.name}: {data.Value}");
+		//    }
 
-        //    var bugStatusFrench = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 2);
-        //    Console.WriteLine("\nBug Status in French:");
-        //    foreach (var data in bugStatusFrench)
-        //    {
-        //        //  Console.WriteLine($"{data.Name}: {data.Value}");
-        //    }
-        //}
+		//    var bugStatusFrench = globalData.GetGlobalDataByTypeAndLanguage("bugstatus", 2);
+		//    Console.WriteLine("\nBug Status in French:");
+		//    foreach (var data in bugStatusFrench)
+		//    {
+		//        //  Console.WriteLine($"{data.Name}: {data.Value}");
+		//    }
+		//}
 
-    }
+	}
 }
 

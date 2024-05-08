@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VersionsCRUD.Bug;
 using VersionsCRUD.Feature;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
@@ -249,6 +250,32 @@ namespace VersionsCRUD.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            FeatureGetByIdReq resp = new FeatureGetByIdReq();
+            resp.id = id;
+
+            var res = await GetById(resp);
+            ViewBag.action = "edit";
+
+
+            if (res.Value.code == 0)
+            {
+                ViewBag.FeatureName = res.Value.feature.name;
+                ViewBag.FeatureDescription = res.Value.feature.description;
+                ViewBag.FeatureRelease = res.Value.feature.release;
+            }
+            else
+            {
+                ViewBag.FeatureName = "";
+                ViewBag.FeatureDescription = "";
+                ViewBag.FeatureRelease = "";
+            }
+
             return View();
         }
     }

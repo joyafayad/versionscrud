@@ -1,1 +1,170 @@
-﻿
+﻿<link rel="stylesheet" href=@Url.Content("~/assets/css/create.css") type="text/css" />
+
+
+<body>
+    <div class="login-root">
+        <div class="box-root flex-flex flex-direction--column" style="min-height: 100vh;flex-grow: 1;">
+            <div class="loginbackground box-background--white padding-top--64">
+                <div class="loginbackground-gridContainer">
+                    <div class="box-root flex-flex" style="grid-area: top / start / 8 / end;">
+                        <div class="box-root" style="background-image: linear-gradient(white 0%,rgb(247, 250, 252) 33%); flex-grow: 1;">
+                        </div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 4 / 2 / auto / 5;">
+                        <div class="box-root box-divider--light-all-2 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 6 / start / auto / 2;">
+                        <div class="box-root box-background--blue800" style="flex-grow: 1;"></div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 7 / start / auto / 4;">
+                        <div class="box-root box-background--blue animationLeftRight" style="flex-grow: 1;"></div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 8 / 4 / auto / 6;">
+                        <div class="box-root box-background--gray100 animationLeftRight tans3s" style="flex-grow: 1;"></div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 2 / 15 / auto / end;">
+                        <div class="box-root box-background--cyan200 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 3 / 14 / auto / end;">
+                        <div class="box-root box-background--blue animationRightLeft" style="flex-grow: 1;"></div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 4 / 17 / auto / 20;">
+                        <div class="box-root box-background--gray100 animationRightLeft tans4s" style="flex-grow: 1;"></div>
+                    </div>
+                    <div class="box-root flex-flex" style="grid-area: 5 / 14 / auto / 17;">
+                        <div class="box-root box-divider--light-all-2 animationRightLeft tans3s" style="flex-grow: 1;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-root padding-top--24 flex-flex flex-direction--column" style="flex-grow: 1; z-index: 9;">
+                <div class="box-root padding-top--48 padding-bottom--24 flex-flex flex-justifyContent--center">
+                </div>
+                <div class="formbg-outer">
+                    <div class="formbg">
+                        <div class="formbg-inner padding-horizontal--48">
+                            <span class="padding-bottom--15">Edit your version</span>
+                            <form id="stripe-login">
+
+                                <div class="field padding-bottom--24" style="display: none">
+                                    <label for="versionId">Version </label>
+                                    <select id="versionId" disabled class="versionId" value="@ViewBag.versionId" name="versionId"></select>
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="projectId">Project </label>
+                                    <select id="projectId" disabled class="projectId" value="@ViewBag.projectId" name="projectId"></select>
+
+                                </div>
+                                <div class="field padding-bottom--24">
+                                    <label for="bugId">Bug </label>
+                                    <select id="bugId" class="bugId" value="@ViewBag.bugId" name="bugId"></select>
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="featureId">Feature </label>
+                                    <select id="featureId" class="featureId" value="@ViewBag.featureId" name="featureId"></select>
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="environmentId">Environment</label>
+                                    <select id="environmentId" class="environmentId" value="@ViewBag.environmentId" name="environmentId"></select>
+                                </div>
+
+
+                                <div class="field padding-bottom--24">
+                                    <label for="versionNumber">Version Number</label>
+                                    <input type="text" id="versionNumber" value="@ViewBag.versionNumber" name="versionNumber">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <label for="link">Link</label>
+                                    <input type="text" id="link" value="@ViewBag.link" name="link">
+                                </div>
+
+                                <div class="field padding-bottom--24">
+                                    <input type="submit" name="save" value="save" />
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+
+            // Load data into the project dropdown
+            $.ajax({
+                url: '/api/Version/LoadData',
+                type: 'GET',
+                success: function (result) {
+                    result.version.forEach(function (bug) {
+                        $('#versionId').append(`<option value="${version.id}">${version.name}</option>`);
+                    });
+                    result.projects.forEach(function (project) {
+                        $('#projectId').append(` <option value="${project.id}">${project.name}</option>`);
+                    });
+                    result.bugs.forEach(function (bug) {
+                        $('#bugId').append(`<option value="${bug.id}">${bug.name}</option>`);
+                    });
+                    result.features.forEach(function (feature) {
+                        $('#featureId').append(`<option value="${feature.id}">${feature.name}</option>`);
+                    });
+
+                    result.features.forEach(function (environment) {
+                        $('#environmentId').append(`<option value="${environment.id}">${environment.name}</option>`);
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Error loading projects: ' + xhr.responseText);
+                }
+            });
+
+            $('#stripe-login').submit(function (e) {
+                e.preventDefault(); // prevent default form submission
+
+                var versionData = {
+                    projectId: $('#projectId').val(),
+                    bugId: $('#bugId').val(),
+                    environmentId: $('#environmentId').val(),
+                    featureId: $('#featureId').val(),
+                    versionNumber: $('#versionNumber').val(),
+                    isMajor: $('#isMajor').prop('checked'),
+                    isMinor: $('#isMinor').prop('checked'),
+                    isPatch: $('#isPatch').prop('checked'),
+                    link: $('#link').val()
+                    versionid: $('#versionId').val()
+
+                };
+
+                addVersion(versionData);
+            });
+
+            function addVersion(versionData) {
+                $.ajax({
+                    url: '/api/Version/Update',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(versionData),
+                    success: function (result) {
+                        console.log(result);
+                        alert(result.message);
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert('Error adding version: ' + xhr.responseText);
+                    }
+                });
+            }
+        });
+    </script>
+}
+

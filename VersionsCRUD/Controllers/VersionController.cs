@@ -212,6 +212,7 @@ namespace VersionsCRUD.Controllers
                 id = version.Id,
                 projectId = version.Projectid,
                 versionNumber = version.Versionnumber,
+                //here
             };
 
             resp.code = 0;
@@ -245,6 +246,37 @@ namespace VersionsCRUD.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            VersionGetByIdReq resp = new VersionGetByIdReq();
+            resp.id = id;
+
+            var res = await GetById(resp);
+            ViewBag.action = "edit";
+
+
+            if (res.Value.code == 0)
+            {
+                ViewBag.VersionId = res.Value.version.id;
+                ViewBag.ProjectId = res.Value.version.id;
+                ViewBag.BugId = res.Value.version.id;
+                ViewBag.FeatureId = res.Value.version.id;
+                ViewBag.isMinor = res.Value.version.id;
+                ViewBag.isMajor = res.Value.version.id;
+                ViewBag.isPatch = res.Value.version.id;
+                ViewBag.link = res.Value.version.id;
+            }
+            else
+            {
+                ViewBag.ProjectId = "";
+                ViewBag.BugId = "";
+                ViewBag.FeatureId = "";
+            }
+
             return View();
         }
 

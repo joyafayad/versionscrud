@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VersionsCRUD.Bug;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
 using VersionsCRUD.User;
@@ -267,6 +268,37 @@ namespace VersionsCRUD.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            UserGetByIdReq resp = new UserGetByIdReq();
+            resp.id = id;
+
+            var res = await GetById(resp);
+            ViewBag.action = "edit";
+
+
+            if (res.Value.code == 0)
+            {
+                ViewBag.username = res.Value.user.username;
+                ViewBag.email = res.Value.user.email;
+                ViewBag.password = res.Value.user.password;
+                ViewBag.UserId = res.Value.user.id.Value.ToString();
+
+            }
+            else
+            {
+                ViewBag.username = "";
+                ViewBag.email = "";
+                ViewBag.password = "";
+                ViewBag.UserId = "";
+
+            }
+
+            return View();
+        }
+
         //[HttpPost]
         //public IActionResult Logout(TokenRequest request)
         //{
