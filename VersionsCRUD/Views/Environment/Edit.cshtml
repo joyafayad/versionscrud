@@ -44,6 +44,12 @@
                         <div class="formbg-inner padding-horizontal--48">
                             <span class="padding-bottom--15">Edit your environment</span>
                             <form id="stripe-login">
+
+                                <div class="field padding-bottom--24" style="display: none">
+                                    <label for="environmentId">ID</label>
+                                    <input type="text" disabled id="environmentId" value="@ViewBag.environmentId" class="environmentId" name="environmnetId">
+                                </div>
+
                                 <div class="field padding-bottom--24">
                                     <label for="environmentName">Environment Name</label>
                                     <input type="text" id="environmentName" class="environmentName" value="@ViewBag.EnvvironmentName" name="environmentName">
@@ -85,7 +91,13 @@
                     result.projects.forEach(function (project) {
                         $('#projectId').append(` <option value="${project.id}">${project.name}</option>`);
                     });
+
+                    var selectedProjectId = "@ViewBag.SelectedProjectId"; 
+
+                    
+                    $('#projectId').val(selectedProjectId);
                 },
+                
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
                     alert('Error loading projects: ' + xhr.responseText);
@@ -98,7 +110,8 @@
                 var environmentData = {
                     name: $('#environmentName').val(),
                     description: $('#environmentDescription').val(),
-                    projectId: $('#projectId').val()
+                    projectId: $('#projectId').val(),
+                    id: $('#environmentId').val()
                 };
 
                 addEnvironment(environmentData);

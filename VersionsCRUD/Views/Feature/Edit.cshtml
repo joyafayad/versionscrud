@@ -45,6 +45,11 @@
                             <span class="padding-bottom--15">Edit your feature</span>
                             <form id="feature-login">
 
+                                <div class="field padding-bottom--24" style="display: none">
+                                    <label for="featureId">ID</label>
+                                    <input type="text" disabled id="featureId" value="@ViewBag.featureId" class="featureId" name="featureId">
+                                </div>
+
                                 <div class="field padding-bottom--24">
                                     <label for="name">Name</label>
                                     <input type="text" id="featureName" class="featureName" value="@ViewBag.featureName" name="name">
@@ -57,7 +62,7 @@
 
                                 <div class="field padding-bottom--24">
                                     <label for="release">Release Date</label>
-                                    <input type="text" id="featureRelease" class="featureRelease" value="@ViewBag.featureRelease" name="release">
+                                    <input type="date" id="featureRelease" class="featureRelease" value="@ViewBag.featureRelease" name="release">
                                 </div>
 
 
@@ -84,11 +89,12 @@
                 var featureData = {
                     name: $('#featureName').val(),
                     description: $('#featureDescription').val(),
-                    release: $('#featureRelease').val()
+                    release: $('#featureRelease').val(),
+                    Id: $('#featureId').val()
                 };
 
 
-                addFeature(featureData, '/api/Feature/Add');
+                addFeature(featureData, '/api/Feature/Update');
             });
 
             function addFeature(featureData, apiUrl) {

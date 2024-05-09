@@ -44,6 +44,12 @@
 						<div class="formbg-inner padding-horizontal--48">
 							<span class="padding-bottom--15">edit your bug</span>
 							<form id="stripe-login">
+
+								<div class="field padding-bottom--24" style="display: none">
+									<label for="bugId">ID</label>
+									<input type="text" disabled id="bugId" value="@ViewBag.bugId" class="bugId" name="bugId">
+								</div>
+
 								<div class="field padding-bottom--24">
 									<label for="bugDescription">Description</label>
 									<input type="text" id="bugDescription" class="bugDescription" value="@ViewBag.bugDescription" name="description">
@@ -81,7 +87,8 @@
 				var bugData = {
 					description: $('#bugDescription').val(),
 					status: $('#bugStatus').val() == "" ? 0 : $('#bugStatus').val(),
-					reported: $('#bugReported').val()
+					reported: $('#bugReported').val(),
+					Id: $('#bugId').val()
 				};
 
 				addBug(bugData);
@@ -89,7 +96,7 @@
 
 			function addBug(bugData) {
 				$.ajax({
-					url: '/api/Bug/Add',
+					url: '/api/Bug/Update',
 					type: 'POST',
 					contentType: 'application/json',
 					data: JSON.stringify(bugData),

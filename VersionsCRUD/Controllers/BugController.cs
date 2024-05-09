@@ -260,12 +260,14 @@ namespace VersionsCRUD.Controllers
 				ViewBag.BugDescription = res.Value.bug.description;
 				ViewBag.BugStatus = res.Value.bug.status;
 				ViewBag.BugReported = res.Value.bug.reported;
+				ViewBag.BugId = res.Value.bug.id.Value.ToString();
 			}
 			else
 			{
 				ViewBag.BugDescription= "";
 				ViewBag.BugStatus = "";
 				ViewBag.BugReported = "";
+				ViewBag.BugId = "";
 			}
 
 			return View();

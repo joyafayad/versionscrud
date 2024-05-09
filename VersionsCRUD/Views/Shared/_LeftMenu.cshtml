@@ -1,6 +1,6 @@
 ﻿
 
-<link rel="stylesheet" href=@Url.Content("~/assets/css/nav.css") type="text/css" />
+<link rel="stylesheet" href=@Url.Content("~/assets/css/nav.css") type="text/css" asp-append-version="true" />
 
 <nav>
     <ul>
@@ -12,4 +12,21 @@
         <li><a href="@Url.Content("~/api/user/Index")"><span>User</span></a></li>
     </ul>
 </nav>
-<button class="sign-out-button" onclick="location.href='/login'">Sign Out</button>
+<button class="sign-out-button" onclick="LogoutF()">Sign Out</button>
+
+
+<script>
+    function LogoutF(){
+		$.ajax({
+			url: '/Login/Logout',
+			type: 'POST',
+			contentType: 'application/json',
+			success: function (result) {
+				location.reload();
+			},
+			error: function (xhr, status, error) {
+				console.error(xhr.responseText);
+			}
+		});
+    }
+</script>

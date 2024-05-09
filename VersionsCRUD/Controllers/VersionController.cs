@@ -161,6 +161,14 @@ namespace VersionsCRUD.Controllers
 
             version.Projectid = req.projectId;
             version.Versionnumber = req.versionNumber;
+            version.IsMajor = req.isMajor;
+            version.IsMinor = req.isMinor;
+            version.IsPatch = req.isPatch;
+            version.FeatureId = req.featureId;
+            version.EnvironmentId = req.environmentId;
+            version.BugId = req.bugId;
+            
+
 
             _context.Versions.Update(version);
             await _context.SaveChangesAsync();

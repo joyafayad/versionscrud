@@ -8,316 +8,324 @@ using VersionsCRUD.User;
 
 namespace VersionsCRUD.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]/[action]")]
-    public class UserController : Controller
-    {
-        private readonly postgresContext _context;
+	[ApiController]
+	[Route("api/[controller]/[action]")]
+	public class UserController : Controller
+	{
+		private readonly postgresContext _context;
 
-        public UserController(postgresContext context)
-        {
-            _context = context;
-        }
+		public UserController(postgresContext context)
+		{
+			_context = context;
+		}
 
-        public async Task<IActionResult> Index()
-        {
-            var usersDb = await _context.Users.ToListAsync();
+		public async Task<UserGetResp> ListUsers()
+		{
+			var usersDb = await _context.Users.ToListAsync();
 
-            // Configure AutoMapper
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<VersionsCRUD.Models.User, UserGet>();
-            });
-            var mapper = config.CreateMapper();
+			// Configure AutoMapper
+			var config = new MapperConfiguration(cfg =>
+			{
+				cfg.CreateMap<VersionsCRUD.Models.User, UserGet>();
+			});
+			var mapper = config.CreateMapper();
 
-            // Map the users to DTOs
-            var usersDto = mapper.Map<List<UserGet>>(usersDb);
+			// Map the users to DTOs
+			var usersDto = mapper.Map<List<UserGet>>(usersDb);
 
-            // Create the response object
-            var resp = new UserGetResp
-            {
-                users = usersDto,
-                totalCount = usersDto.Count
-            };
+			// Create the response object
+			var resp = new UserGetResp
+			{
+				users = usersDto,
+				totalCount = usersDto.Count
+			};
 
-            return View(resp);
-        }
+			return resp;
+		}
 
-        /// <summary>
-        /// add a user
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<UserAddResp>> Add(UserAddReq req)
-        {
-            UserAddResp resp = new();
+		public async Task<IActionResult> Index()
+		{
 
-            if (req == null)
-            {
-                //Handled request null
-                resp.code = 1;
-                resp.message = "Something went wrong. Please try again later ! ";
-                return resp;
-            }
+			var resp = await ListUsers();
 
-            var user = new VersionsCRUD.Models.User();
-            user.Id = Guid.NewGuid(); // Generate a new GUID for the project
-            user.Username = req.username;
-            user.Email = req.email;
-            user.Password = req.password;
+			return View(resp);
+		}
 
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+		/// <summary>
+		/// add a user
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<UserAddResp>> Add(UserAddReq req)
+		{
+			UserAddResp resp = new();
 
-            resp.id = user.Id;
-            resp.code = 0;
-            resp.message = "Success";
-            return resp;
-        }
+			if (req == null)
+			{
+				//Handled request null
+				resp.code = 1;
+				resp.message = "Something went wrong. Please try again later ! ";
+				return resp;
+			}
 
-        /// <summary>
-        /// get a list of user
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<UserGetResp>> Get(UserGetReq req)
-        {
-            UserGetResp resp = new();
+			var user = new VersionsCRUD.Models.User();
+			user.Id = Guid.NewGuid(); // Generate a new GUID for the project
+			user.Username = req.username;
+			user.Email = req.email;
+			user.Password = req.password;
 
-            List<VersionsCRUD.Models.User> usersDb = await _context.Users
-           .Skip((req.pagenumber - 1) * req.pagesize)
-           .Take(req.pagesize)
-           .ToListAsync();
+			_context.Users.Add(user);
+			await _context.SaveChangesAsync();
 
-            // Configure AutoMapper
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MappingUser>();
-            });
-            var mapper = config.CreateMapper();
+			resp.id = user.Id;
+			resp.code = 0;
+			resp.message = "Success";
+			return resp;
+		}
 
-            // Map the projects to DTOs
-            resp.users = mapper.Map<List<VersionsCRUD.Models.User>, List<UserGet>>(usersDb);
-            resp.totalCount = resp.users.Count;
+		/// <summary>
+		/// get a list of user
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<UserGetResp>> Get(UserGetReq req)
+		{
+			UserGetResp resp = new();
 
-            resp.code = 0;
-            resp.message = "Success";
-            return resp;
-        }
+			List<VersionsCRUD.Models.User> usersDb = await _context.Users
+		   .Skip((req.pagenumber - 1) * req.pagesize)
+		   .Take(req.pagesize)
+		   .ToListAsync();
 
-        /// <summary>
-        /// update a user
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<UserUpdateResp>> Update(UserUpdateReq req)
-        {
-            UserUpdateResp resp = new();
-            var user = await _context.Users.FindAsync(req.id);
+			// Configure AutoMapper
+			var config = new MapperConfiguration(cfg =>
+			{
+				cfg.AddProfile<MappingUser>();
+			});
+			var mapper = config.CreateMapper();
 
-            if (user == null)
-            {
-                //Handled user not found
-                resp.code = 14;
-                resp.message = "User Not Found";
-                return resp;
-            }
+			// Map the projects to DTOs
+			resp.users = mapper.Map<List<VersionsCRUD.Models.User>, List<UserGet>>(usersDb);
+			resp.totalCount = resp.users.Count;
 
-            user.Username = req.username;
-            user.Email = req.email;
-            user.Password = req.password;
+			resp.code = 0;
+			resp.message = "Success";
+			return resp;
+		}
 
-            _context.Users.Update(user);
-            await _context.SaveChangesAsync();
+		/// <summary>
+		/// update a user
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<UserUpdateResp>> Update(UserUpdateReq req)
+		{
+			UserUpdateResp resp = new();
+			var user = await _context.Users.FindAsync(req.id);
 
-            resp.code = 0;
-            resp.message = "Success";
-            return resp;
-        }
+			if (user == null)
+			{
+				//Handled user not found
+				resp.code = 14;
+				resp.message = "User Not Found";
+				return resp;
+			}
 
-        /// <summary>
-        /// delete a user
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<UserDeleteResp>> Delete(UserDeleteReq req)
-        {
-            UserDeleteResp resp = new();
-            var user = await _context.Users.FindAsync(req.id);
+			user.Username = req.username;
+			user.Email = req.email;
+			user.Password = req.password;
 
-            if (user == null)
-            {
-                //Handled user not found
-                resp.code = 14;
-                resp.message = "User Not Found";
-                return resp;
-            }
+			_context.Users.Update(user);
+			await _context.SaveChangesAsync();
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+			resp.code = 0;
+			resp.message = "Success";
+			return resp;
+		}
 
-            resp.code = 0;
-            resp.message = "Success";
-            return resp;
-        }
+		/// <summary>
+		/// delete a user
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<UserDeleteResp>> Delete(UserDeleteReq req)
+		{
+			UserDeleteResp resp = new();
+			var user = await _context.Users.FindAsync(req.id);
 
-        /// <summary>
-        /// getbyid a user
-        /// </summary>
-        /// <param name="req"></param>
-        /// <remarks>
-        /// codes : 0 - Success / 6- Invalid reported date format <br/>
-        /// reported date format : yyyy-MM-dd
-        /// </remarks>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<ActionResult<UserGetByIdResp>> GetById(UserGetByIdReq req)
-        {
-            UserGetByIdResp resp = new();
-            var user = await _context.Users.FindAsync(req.id);
+			if (user == null)
+			{
+				//Handled user not found
+				resp.code = 14;
+				resp.message = "User Not Found";
+				return resp;
+			}
 
-            if (user == null)
-            {
-                //Handled user not found
-                resp.code = 14;
-                resp.message = "User Not Found";
-                return resp;
-            }
+			_context.Users.Remove(user);
+			await _context.SaveChangesAsync();
 
-            resp.user = new UserGet
-            {
-                id = user.Id,
-                username = user.Username,
-                email = user.Email,
-                password = user.Password,
-            };
+			resp.code = 0;
+			resp.message = "Success";
+			return resp;
+		}
 
-            resp.code = 0;
-            resp.message = "Success";
+		/// <summary>
+		/// getbyid a user
+		/// </summary>
+		/// <param name="req"></param>
+		/// <remarks>
+		/// codes : 0 - Success / 6- Invalid reported date format <br/>
+		/// reported date format : yyyy-MM-dd
+		/// </remarks>
+		/// <returns></returns>
+		[HttpPost]
+		public async Task<ActionResult<UserGetByIdResp>> GetById(UserGetByIdReq req)
+		{
+			UserGetByIdResp resp = new();
+			var user = await _context.Users.FindAsync(req.id);
 
-            return resp;
-        }
+			if (user == null)
+			{
+				//Handled user not found
+				resp.code = 14;
+				resp.message = "User Not Found";
+				return resp;
+			}
 
-        [HttpPost]
-        public IActionResult Login(LoginRequest request)
-        {
-            var user = _context.Users.FirstOrDefault(u => u.Username == request.Username);
+			resp.user = new UserGet
+			{
+				id = user.Id,
+				username = user.Username,
+				email = user.Email,
+				password = user.Password,
+			};
 
-            if (user != null && VerifyPassword(request.Password, user.Password))
-            {
+			resp.code = 0;
+			resp.message = "Success";
 
-                user.Isloggedin = true;
-                //user.Lastlogin = DateTime.UtcNow;
-                _context.SaveChanges();
-                var token = GenerateToken(user);
+			return resp;
+		}
 
-                return Ok(new { code = 0, token });
-            }
-            else
-            {
+		[HttpPost]
+		public IActionResult Login(LoginRequest request)
+		{
+			var user = _context.Users.FirstOrDefault(u => u.Username == request.Username);
 
-                return Unauthorized(new { code = 1211212, message = "Invalid credentials" });
-            }
-        }
+			if (user != null && VerifyPassword(request.Password, user.Password))
+			{
 
+				user.Isloggedin = true;
+				//user.Lastlogin = DateTime.UtcNow;
+				_context.SaveChanges();
+				var token = GenerateToken(user);
 
-        private bool VerifyPassword(string enteredPassword, string storedPassword)
-        {
+				return Ok(new { code = 0, token });
+			}
+			else
+			{
 
-            return enteredPassword == storedPassword;
-        }
-
-        private string GenerateToken(VersionsCRUD.Models.User user)
-        {
-
-            return "dummy_token";
-        }
-
-        [HttpPost]
-        public IActionResult RefreshToken(TokenRequest request)
-        {
-
-            var newToken = "dummy_refreshed_token";
+				return Unauthorized(new { code = 1211212, message = "Invalid credentials" });
+			}
+		}
 
 
-            return Ok(new { token = newToken });
-        }
+		private bool VerifyPassword(string enteredPassword, string storedPassword)
+		{
 
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
+			return enteredPassword == storedPassword;
+		}
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
-        {
-            UserGetByIdReq resp = new UserGetByIdReq();
-            resp.id = id;
+		private string GenerateToken(VersionsCRUD.Models.User user)
+		{
 
-            var res = await GetById(resp);
-            ViewBag.action = "edit";
+			return "dummy_token";
+		}
 
+		[HttpPost]
+		public IActionResult RefreshToken(TokenRequest request)
+		{
 
-            if (res.Value.code == 0)
-            {
-                ViewBag.username = res.Value.user.username;
-                ViewBag.email = res.Value.user.email;
-                ViewBag.password = res.Value.user.password;
-                ViewBag.UserId = res.Value.user.id.Value.ToString();
-
-            }
-            else
-            {
-                ViewBag.username = "";
-                ViewBag.email = "";
-                ViewBag.password = "";
-                ViewBag.UserId = "";
-
-            }
-
-            return View();
-        }
-
-        //[HttpPost]
-        //public IActionResult Logout(TokenRequest request)
-        //{
-
-        //    var user = _context.Users.FirstOrDefault(u => u.Token == request.Token);
-
-        //    if (user != null)
-        //    {
-
-        //        user.Isloggedin = false;
-        //        // user.Lastlogout = DateTime.UtcNow;
-        //        _context.SaveChanges();
-
-        //        return Ok(new { message = "User logged out successfully" });
-        //    }
+			var newToken = "dummy_refreshed_token";
 
 
-        //    return Unauthorized(new { message = "Invalid token" });
-        //}
-    }
+			return Ok(new { token = newToken });
+		}
+
+		[HttpGet]
+		public IActionResult Create()
+		{
+			return View();
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Edit(Guid id)
+		{
+			UserGetByIdReq resp = new UserGetByIdReq();
+			resp.id = id;
+
+			var res = await GetById(resp);
+			ViewBag.action = "edit";
+
+
+			if (res.Value.code == 0)
+			{
+				ViewBag.username = res.Value.user.username;
+				ViewBag.email = res.Value.user.email;
+				ViewBag.password = res.Value.user.password;
+				ViewBag.UserId = res.Value.user.id.Value.ToString();
+
+			}
+			else
+			{
+				ViewBag.username = "";
+				ViewBag.email = "";
+				ViewBag.password = "";
+				ViewBag.UserId = "";
+
+			}
+
+			return View();
+		}
+
+		//[HttpPost]
+		//public IActionResult Logout(TokenRequest request)
+		//{
+
+		//    var user = _context.Users.FirstOrDefault(u => u.Token == request.Token);
+
+		//    if (user != null)
+		//    {
+
+		//        user.Isloggedin = false;
+		//        // user.Lastlogout = DateTime.UtcNow;
+		//        _context.SaveChanges();
+
+		//        return Ok(new { message = "User logged out successfully" });
+		//    }
+
+
+		//    return Unauthorized(new { message = "Invalid token" });
+		//}
+	}
 }
 

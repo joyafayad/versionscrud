@@ -273,12 +273,14 @@ namespace VersionsCRUD.Controllers
                 ViewBag.EnvvironmentName = res.Value.environment.name;
                 ViewBag.EnvironmentDescription = res.Value.environment.description;
                 ViewBag.ProjectId = res.Value.environment.projectid.Value.ToString();
+                ViewBag.EnvironmentId = res.Value.environment.id.Value.ToString();
             }
             else
             {
                 ViewBag.EnvvironmentName = "";
                 ViewBag.EnvironmentDescription = "";
                 ViewBag.ProjectId = "";
+                ViewBag.EnvvironmentId = "";
             }
 
             return View();

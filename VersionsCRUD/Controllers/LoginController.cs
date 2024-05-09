@@ -7,6 +7,7 @@ using VersionsCRUD.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Data;
 using System.Security.Claims;
+using VersionsCRUD.User;
 
 namespace VersionsCRUD.Controllers
 {
@@ -29,19 +30,52 @@ namespace VersionsCRUD.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				if (model.username == "test" && model.password == "test")
-				{
-					var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
-					identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, model.username));
-					identity.AddClaim(new Claim(ClaimTypes.Name, model.username));
-					identity.AddClaim(new Claim("test", model.username));
-					var principal = new ClaimsPrincipal(identity);
+				#region Dynamic Login
+				UserController c = new UserController(new postgresContext());
+				var result = await c.ListUsers();
 
-					await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+				var userList = result.users.ToList();
+
+				foreach (var user in userList)
+				{
+					if (user != null && user.username == model.username && user.password == model.password)
+					{
+						var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
+						identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, model.username));
+						identity.AddClaim(new Claim(ClaimTypes.Name, model.username));
+						var principal = new ClaimsPrincipal(identity);
+
+						await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+					}
 				}
+				#endregion
+
+
+				#region Static Login
+				//if (model.username == "test" && model.password == "test")
+				//{
+				//	var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme, ClaimTypes.Name, ClaimTypes.Role);
+				//	identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, model.username));
+				//	identity.AddClaim(new Claim(ClaimTypes.Name, model.username));
+				//	var principal = new ClaimsPrincipal(identity);
+
+				//	await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+				//}
+				#endregion
 			}
 
 			return RedirectToAction("Index", "Home");
+		}
+
+		public async Task<IActionResult> Logout()
+		{
+			//HttpContext.Session.Clear();
+
+			//SignOutAsync is Extension method for SignOut 
+			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies"); 
+			
+			return RedirectToAction("Index") ;
 		}
 	}
 }

@@ -268,13 +268,16 @@ namespace VersionsCRUD.Controllers
                 ViewBag.FeatureName = res.Value.feature.name;
                 ViewBag.FeatureDescription = res.Value.feature.description;
                 ViewBag.FeatureRelease = res.Value.feature.release;
-            }
+				ViewBag.FeatureId = res.Value.feature.id.Value.ToString();
+			}
             else
             {
                 ViewBag.FeatureName = "";
                 ViewBag.FeatureDescription = "";
                 ViewBag.FeatureRelease = "";
-            }
+				ViewBag.FeatureId = "";
+
+			}
 
             return View();
         }
