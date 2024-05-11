@@ -543,21 +543,21 @@ div.dt-container div.dt-layout-cell.dt-end {
 div.dt-container div.dt-layout-cell:empty {
   display: none;
 }
-div.dt-container .dt-search input {
-  border: 1px solid #aaa;
-  border-radius: 3px;
-  padding: 5px;
-  background-color: transparent;
-  color: inherit;
-  margin-left: 3px;
-}
-div.dt-container .dt-input {
-  border: 1px solid #aaa;
-  border-radius: 3px;
-  padding: 5px;
-  background-color: transparent;
-  color: inherit;
-}
+    div.dt-container .dt-search input {
+        border: 1px solid #aaa;
+        border-radius: 3px;
+        padding: 5px;
+        background-color: #fff;
+        color: inherit;
+        margin-left: 3px;
+    }
+    div.dt-container .dt-input {
+        border: 1px solid #0c0c0c;
+        border-radius: 3px;
+        padding: 5px;
+        background-color: transparent;
+        color: inherit;
+    }
 div.dt-container select.dt-input {
   padding: 4px;
 }

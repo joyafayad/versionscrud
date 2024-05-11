@@ -57,7 +57,7 @@ a:link {
 }
 
 a:visited {
-    color: blue;
+    color: #fff;
     background-color: transparent;
     text-decoration: none;
 }
