@@ -14,7 +14,6 @@
         <tr>
             <th>Environment Name</th>
             <th>Description</th>
-            @*<th>Project ID</th>*@
             <th>Project Name</th>
             <th> Action</th>
         </tr>
@@ -24,8 +23,7 @@
         {
             <tr>
                 <td>@environment.name</td>
-                <td>@environment.description</td>
-                @*<td>@environment.projectid</td>*@                
+                <td>@environment.description</td>         
                 <td>@environment.projectName</td>
                 <td>
                     <button onclick="deleteEnvironment('@environment.id')">

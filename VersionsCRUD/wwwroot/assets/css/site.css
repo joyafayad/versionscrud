@@ -115,3 +115,7 @@ button:focus svg {
         transition: 0s;
         transform: translate(0, 5%);
     }
+
+element.style {
+    width: 900px;
+}
