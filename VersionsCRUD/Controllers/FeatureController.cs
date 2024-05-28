@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using VersionsCRUD.Bug;
 using VersionsCRUD.Feature;
 using VersionsCRUD.Mapping;
@@ -154,10 +155,27 @@ namespace VersionsCRUD.Controllers
                 return resp;
             }
 
+            //Joya4 : release date
+            DateOnly dateRelease;
+            if (string.IsNullOrEmpty(req.release))
+            {
+                //If Release Date is not provided --> Fill by today's date
+                req.release = DateTime.Today.ToString("yyyy-MM-dd");
+            }
+            //To validate that format is yyyy-MM-dd
+            if (!DateOnly.TryParse(req.release, out dateRelease))
+            {
+                //We are converting the string to DateOnly by this method
+                resp.code = 6;
+                resp.message = "Invalid reported date format";
+                return resp;
+            }
+
+
             feature.Name = req.name;
             feature.Description = req.description;
-            //feature.Release = req.release;
-
+            feature.Release = dateRelease;
+ 
             _context.Features.Update(feature);
             await _context.SaveChangesAsync();
 
@@ -194,7 +212,7 @@ namespace VersionsCRUD.Controllers
                 id = feature.Id,
                 name = feature.Name,
                 description = feature.Description,
-                //release = feature.Release,
+                release = feature.Release.ToString()
             };
 
             resp.code = 0;
@@ -267,7 +285,17 @@ namespace VersionsCRUD.Controllers
             {
                 ViewBag.FeatureName = res.Value.feature.name;
                 ViewBag.FeatureDescription = res.Value.feature.description;
-                ViewBag.FeatureRelease = res.Value.feature.release;
+                //Joya3 : Convert Date "4/13/2024" into yyyy-MM-dd
+                //previously
+                //ViewBag.FeatureRelease = res.Value.feature.release;
+                if (res.Value.feature.release != null)
+                {
+                    DateTime date = DateTime.ParseExact(res.Value.feature.release, "M/d/yyyy", CultureInfo.InvariantCulture);
+
+                    // Format the DateTime object as "yyyy-MM-dd"
+                    ViewBag.FeatureRelease = date.ToString("yyyy-MM-dd");
+                }
+                
 				ViewBag.FeatureId = res.Value.feature.id.Value.ToString();
 			}
             else

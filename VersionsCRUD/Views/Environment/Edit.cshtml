@@ -62,7 +62,7 @@
 
                                 <div class="field padding-bottom--24">
                                     <label for="projectId">Project ID</label>
-                                    <select id="projectId" class="projectId" value="@ViewBag.projectId" name="projectId"></select>
+                                    <select id="projectId" class="projectId" value="@ViewBag.ProjectId" name="projectId"></select>
 
                                 </div>
 
@@ -82,6 +82,9 @@
 @section scripts {
     <script>
         $(document).ready(function () {
+            console.log('jaafar');
+            console.log('@ViewBag.environmentDescription');
+            //console.log('@ViewBag.ProjectId');
 
             // Load data into the project dropdown
             $.ajax({
@@ -92,9 +95,11 @@
                         $('#projectId').append(` <option value="${project.id}">${project.name}</option>`);
                     });
 
-                    var selectedProjectId = "@ViewBag.SelectedProjectId"; 
+                    //Joya5 : auto-selection
+                    var selectedProjectId = "@ViewBag.ProjectId"; 
+                    console.log('selectedProjectId');
 
-                    
+                    console.log(selectedProjectId);
                     $('#projectId').val(selectedProjectId);
                 },
                 

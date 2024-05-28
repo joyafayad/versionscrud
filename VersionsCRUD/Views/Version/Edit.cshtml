@@ -47,7 +47,8 @@
 
                                 <div class="field padding-bottom--24" style="display: none">
                                     <label for="versionId">Version </label>
-                                    <select id="versionId" disabled class="versionId" value="@ViewBag.versionId" name="versionId"></select>
+                                    @*<select id="versionId" disabled class="versionId" value="@ViewBag.versionId" name="versionId"></select>*@
+                                    <input type="text" id="versionId" disabled class="versionId" value="@ViewBag.versionId" name="versionId">
                                 </div>
 
                                 <div class="field padding-bottom--24">
@@ -103,9 +104,9 @@
                 url: '/api/Version/LoadData',
                 type: 'GET',
                 success: function (result) {
-                    result.version.forEach(function (bug) {
-                        $('#versionId').append(`<option value="${version.id}">${version.name}</option>`);
-                    });
+                    //result.version.forEach(function (bug) {
+                    //    $('#versionId').append(`<option value="${version.id}">${version.name}</option>`);
+                    //});
                     result.projects.forEach(function (project) {
                         $('#projectId').append(` <option value="${project.id}">${project.name}</option>`);
                     });
@@ -119,6 +120,16 @@
                     result.environments.forEach(function (environment) {
                         $('#environmentId').append(`<option value="${environment.id}">${environment.name}</option>`);
                     });
+
+                    //Joya6 : auto-selection
+                    var selectedProjectId = "@ViewBag.ProjectId"; 
+                    $('#projectId').val(selectedProjectId);
+                    var selectedEnvironmentId = "@ViewBag.EnvironmentId"; 
+                    $('#environmentId').val(selectedEnvironmentId);
+                    var selectedBugId = "@ViewBag.BugId"; 
+                    $('#bugId').val(selectedBugId);
+                    var selectedFeatureId = "@ViewBag.FeatureId"; 
+                    $('#featureId').val(selectedFeatureId);
 
                 },
                 error: function (xhr, status, error) {
@@ -139,7 +150,7 @@
                     isMajor: $('#isMajor').prop('checked'),
                     isMinor: $('#isMinor').prop('checked'),
                     isPatch: $('#isPatch').prop('checked'),
-                    link: $('#link').val()
+                    link: $('#link').val(),
                     id: $('#versionId').val()
 
                 };

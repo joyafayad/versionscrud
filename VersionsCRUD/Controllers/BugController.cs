@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using VersionsCRUD.Bug;
 using VersionsCRUD.Mapping;
 using VersionsCRUD.Models;
@@ -125,8 +126,26 @@ namespace VersionsCRUD.Controllers
                 return resp;
             }
 
+            //Joya2 : report date
+            DateOnly dateReported;
+            if (string.IsNullOrEmpty(req.reported))
+            {
+                //If Reported Date is not provided --> Fill by today's date
+                req.reported = DateTime.Today.ToString("yyyy-MM-dd");
+            }
+            //To validate that format is yyyy-MM-dd
+            if (!DateOnly.TryParse(req.reported, out dateReported))
+            {
+                //We are converting the string to DateOnly by this method
+                resp.code = 6;
+                resp.message = "Invalid reported date format";
+                return resp;
+            }
+
+
             bug.Description = req.description;
             bug.Status = req.status;
+            bug.Reported = dateReported;
 
             _context.Bugs.Update(bug);
             await _context.SaveChangesAsync();
@@ -259,7 +278,16 @@ namespace VersionsCRUD.Controllers
 			{
 				ViewBag.BugDescription = res.Value.bug.description;
 				ViewBag.BugStatus = res.Value.bug.status;
-				ViewBag.BugReported = res.Value.bug.reported;
+                //Joya1 : Convert Date "4/13/2024" into yyyy-MM-dd
+                //previously
+                //ViewBag.BugReported = res.Value.bug.reported;
+                if (res.Value.bug.reported != null)
+                {
+                    DateTime date = DateTime.ParseExact(res.Value.bug.reported, "M/d/yyyy", CultureInfo.InvariantCulture);
+
+                    // Format the DateTime object as "yyyy-MM-dd"
+                    ViewBag.BugReported = date.ToString("yyyy-MM-dd");
+                }
 				ViewBag.BugId = res.Value.bug.id.Value.ToString();
 			}
 			else

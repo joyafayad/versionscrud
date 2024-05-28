@@ -298,6 +298,7 @@ namespace VersionsCRUD.Controllers
                 ViewBag.EnvironmentId = res.Value.version.environmentId;
                 ViewBag.BugId = res.Value.version.bugId;
                 ViewBag.FeatureId = res.Value.version.featureId;
+                ViewBag.versionNumber = res.Value.version.versionNumber;
                 ViewBag.isMinor = res.Value.version.isMinor;
                 ViewBag.isMajor = res.Value.version.isMajor;
                 ViewBag.isPatch = res.Value.version.isPatch;
@@ -310,6 +311,7 @@ namespace VersionsCRUD.Controllers
                 ViewBag.EnvironmentId = "";
                 ViewBag.BugId = "";
                 ViewBag.FeatureId = "";
+                ViewBag.versionNumber = "";
                 ViewBag.isMinor = "";
                 ViewBag.isMajor = "";
                 ViewBag.isPatch = "";
